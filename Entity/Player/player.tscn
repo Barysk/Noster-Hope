@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3 uid="uid://dbif1sjlyi52h"]
+
+[ext_resource type="Script" path="res://Entity/Player/player.gd" id="1_k1fa2"]
+[ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_tgjul"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_vargc"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_rj8df"]
+size = Vector3(0.915, 0.28, 0.325)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_qbaak"]
+radius = 0.45
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_t026s"]
+radius = 0.4
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ghcvq"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 2
+motion_mode = 1
+script = ExtResource("1_k1fa2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_vargc")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.187955, -0.295481)
+mesh = SubResource("BoxMesh_rj8df")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_qbaak")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 6, -0.312521)
+fov = 90.0
+
+[node name="Attack_Source" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="AttackCoolDown" type="Timer" parent="."]
+wait_time = 0.07
+one_shot = true
+
+[node name="Hurtbox" parent="." instance=ExtResource("2_tgjul")]
+
+[node name="CollisionShape3D" parent="Hurtbox" index="0"]
+shape = SubResource("SphereShape3D_t026s")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_ghcvq")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+
+[editable path="Hurtbox"]

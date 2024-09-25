@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://d2ux6ikgtdjgc"]
+
+[ext_resource type="Script" path="res://Entity/Player/Bullet/bullet.gd" id="1_sd03x"]
+[ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="2_gtaaj"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_785ll"]
+size = Vector3(0.1, 0.1, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_67n0d"]
+size = Vector3(0.09, 0.09, 0.9)
+
+[node name="Bullet" type="Node3D" groups=["player_bullet"]]
+script = ExtResource("1_sd03x")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_785ll")
+
+[node name="TimeToLive" type="Timer" parent="."]
+wait_time = 100.5
+one_shot = true
+autostart = true
+
+[node name="Hitbox" parent="." groups=["player_bullet"] instance=ExtResource("2_gtaaj")]
+collision_mask = 5
+
+[node name="CollisionShape3D" parent="Hitbox" index="0"]
+shape = SubResource("BoxShape3D_67n0d")
+
+[connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
+
+[editable path="Hitbox"]

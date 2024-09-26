@@ -48,7 +48,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 wait_time = 0.07
 one_shot = true
 
-[node name="Hurtbox" parent="." instance=ExtResource("2_tgjul")]
+[node name="Hurtbox" parent="." groups=["player"] instance=ExtResource("2_tgjul")]
 
 [node name="CollisionShape3D" parent="Hurtbox" index="0"]
 shape = SubResource("SphereShape3D_t026s")

@@ -1,29 +1,43 @@
 extends CharacterBody3D
 
-## Signals
+
+#	[ Custom Signals ]
+
 signal health_changed(health_value)
 signal energy_changed(energy_value)
 signal score_changed(score_value)
 
+
+#	[ Preloaded Scenes ]
+
 const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
+
+
+#	[ Attached Child Nodes ]
 
 @onready var attack_cool_down: Timer = $AttackCoolDown
 @onready var attack_source: Node3D = $Attack_Source
 @onready var camera_3d: Camera3D = $Camera3D
 
-const SPEED = 10.0
-@onready var speed : float = SPEED
 
-const HEALTH : int = 2		# Max health
-@onready var health : int = HEALTH : set = set_health
+#	[ Constants ]
 
-const ENERGY : int = 100
-@onready var energy : int = ENERGY : set = set_energy
+const SPEED = 10.0			## Max speed
+const HEALTH : int = 2		## Max health
+const ENERGY : int = 100	## Max energy
 
-var score : int = 0 : set = set_score
 
-# shot last by ...
-var shooter : Node = null
+#	[ Variables ]
+
+@onready var speed : float = SPEED						## actual speed
+@onready var health : int = HEALTH : set = set_health	## actual health
+@onready var energy : int = ENERGY : set = set_energy	## actual energy
+@onready var score : int = 0 : set = set_score			## actual score
+
+@onready var shooter : Node = null 		## Shot last by a Node. Other Player or some other enemy
+@onready var shooter_id : String = ""
+
+#	[ Setters ]
 
 func set_health(new_health : int) -> void:
 	if new_health < health:
@@ -38,7 +52,7 @@ func set_health(new_health : int) -> void:
 	
 	health_changed.emit(health)
 
-func set_energy(new_energy):
+func set_energy(new_energy) -> void:
 	if new_energy < energy:
 		energy = clamp(new_energy, 0, ENERGY)
 	else:
@@ -46,23 +60,30 @@ func set_energy(new_energy):
 	
 	energy_changed.emit(energy)
 
-func set_score(new_score):
+func set_score(new_score) -> void:
 	score = new_score
-	print("Player ", name, " score is ", score)
+	# print("Player ", name, " score is ", score)	# DELETE in future
 	score_changed.emit(score)
 
+
+#	[ Node's functions ]
+
 func _enter_tree() -> void:
+	# name already is uniq, this made in the space.gd when the player is instantiated
 	set_multiplayer_authority(str(name).to_int())
 
-
 func _ready() -> void:
-	if not is_multiplayer_authority(): return
-	camera_3d.current = true
-
-
-func _physics_process(delta: float) -> void:
+	# Check is this node has the authority to controll corresponding camera
+	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
 	
+	# Set the corresponding camera to a player
+	camera_3d.current = true
+
+func _physics_process(delta: float) -> void:
+	# Check is this node has the authority to controll corresponding camera
+	# If not then do not run the rest of the function
+	if not is_multiplayer_authority(): return
 	
 	# Handle staying in Y = 0
 	if position.y != 0:
@@ -74,6 +95,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		speed = SPEED
 
+	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
 		attack_cool_down.start()
 		attack.rpc()
@@ -94,10 +116,12 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
 
-
 	move_and_slide()
 
 
+#	[ My functions ]
+
+# this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)
 func attack() -> void:
 	var bullet = BULLET.instantiate()
@@ -107,21 +131,23 @@ func attack() -> void:
 	bullet.bullet_initiate(name)
 	get_parent().add_child(bullet, true)
 
-
-func add_score(value : int):
+func add_score(value : int) -> void:
 	score += value
 
-
-func receive_damage(energy_damage_value : int):
+# This damage made for a players damage to each other, the enemies will ignore shields
+func receive_damage(energy_damage_value : int) -> void:
 	if energy > 0:
 		energy -= energy_damage_value
 	else:
 		health -= 1
-		
 
+
+#	[ Child Node's signals ]
 
 func _on_hurtbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("player_bullet"):
 		shooter = area.get_parent().get_shooter()
-		print(shooter)
-		receive_damage(7)
+		shooter_id = area.get_parent().get_shooter_id()
+		if shooter != null and shooter_id != name:
+			# print(shooter)	# DELETE in future
+			receive_damage(7)

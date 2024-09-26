@@ -171,43 +171,6 @@ text = "|"
 layout_mode = 2
 text = "SCORE"
 
-[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/HUD"]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -71.0
-offset_bottom = 43.0
-grow_horizontal = 0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/HUD/MarginContainer2"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="IPAddressLabel" type="Label" parent="CanvasLayer/HUD/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-text = "IP - Address"
-horizontal_alignment = 2
-
-[node name="UsernameLabel" type="Label" parent="CanvasLayer/HUD/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-text = "Username"
-horizontal_alignment = 2
-
-[node name="StatusLabel" type="Label" parent="CanvasLayer/HUD/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-text = "Host / Client"
-horizontal_alignment = 2
-
-[node name="IDLabel" type="Label" parent="CanvasLayer/HUD/MarginContainer2/VBoxContainer"]
-layout_mode = 2
-text = "ID"
-horizontal_alignment = 2
-
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")
 spawn_path = NodePath("..")

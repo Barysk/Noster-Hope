@@ -78,8 +78,14 @@ func _on_host_button_pressed() -> void:
 	
 	# Add host player, with unique id
 	add_player(multiplayer.get_unique_id())
+	
+	# COMMENT FOR LOCAL TESTS
+	upnp_setup()
 
 func _on_join_button_pressed() -> void:
+	
+	if address_line.text:
+		ip_address = address_line.text
 	
 	main_menu.hide()
 	hud.show()
@@ -92,3 +98,22 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 		node.health_changed.connect(update_health)
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
+
+
+# [ UPNP ]
+
+func upnp_setup() -> void:
+	var upnp = UPNP.new()
+	
+	var discover_result = upnp.discover()
+	assert(discover_result == UPNP.UPNP_RESULT_SUCCESS, \
+		"UPNP Discover Failed! Error %s" % discover_result)
+	
+	assert(upnp.get_gateway() and upnp.get_gateway().is_valid_gateway(), \
+		"UPNP Invalid Gateway!")
+	
+	var map_result = upnp.add_port_mapping(PORT)
+	assert(map_result == UPNP.UPNP_RESULT_SUCCESS, \
+		"UPNP Port Mapping Failed! Error %s" % map_result)
+	
+	print("Success! Join Address: %s" % upnp.query_external_address())

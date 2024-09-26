@@ -1,26 +1,31 @@
 extends Node3D
 
 
-#	[ Onreadys ]
+#	[ Attached Child Nodes ]
+
 @onready var time_to_live: Timer = $TimeToLive
 
 
 #	[ Constants ]
+
 const SPEED : float = 50
 
 
 #	[ Variables ]
+
 var player_shooter_id : String = " - PROBLEM : Bullet did not get player's id!"
 var player_target : String
 
 
 #	[ Node's functions ]
+
 func _physics_process(delta: float) -> void:
 	# Move bullet forward
 	position += transform.basis * Vector3(0,0,-SPEED) * delta
 
 
 #	[ My functions ]
+
 # bullet initiation, getting shooter player's id
 func bullet_initiate(player_id) -> void:
 	player_shooter_id = player_id
@@ -40,6 +45,7 @@ func bullet_destroy() -> void:
 
 
 #	[ Child Node's signals ]
+
 # bullet timeout
 func _on_time_to_live_timeout() -> void:
 	bullet_destroy()

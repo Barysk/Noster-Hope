@@ -1,5 +1,7 @@
+res://Entity/Tools
+res://Entity/DataServer
+/home/bk/Documents/GameDev/Godot/compiled_projects
 res://addons/testing_object_bk
 res://Entity/Player/Bullet
 res://Entity/Player
 res://Stages/Space
-res://Entity/Tools

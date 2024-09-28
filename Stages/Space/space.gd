@@ -10,9 +10,8 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 
 # Main Menu
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
+@onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
 @onready var address_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressLine
-@onready var username_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/UsernameLine
-@onready var warning: RichTextLabel = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/Warning
 
 # HUD
 @onready var hud: Control = $CanvasLayer/HUD
@@ -79,8 +78,8 @@ func _on_host_button_pressed() -> void:
 	# Add host player, with unique id
 	add_player(multiplayer.get_unique_id())
 	
-	# COMMENT FOR LOCAL TESTS
-	upnp_setup()
+	if is_online_check_box.button_pressed:
+		upnp_setup()
 
 func _on_join_button_pressed() -> void:
 	

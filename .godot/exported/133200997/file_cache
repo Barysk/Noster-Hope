@@ -1,0 +1,7 @@
+res://addons/testing_object_bk/mesh_library_one_cube.tres::a55d0607a44544872e680679536ce5d6::1727354376::res://.godot/exported/133200997/export-02b33e575343e05b459d86afad375e34-mesh_library_one_cube.res
+res://addons/testing_object_bk/static_cube.tscn::8e09a790d501eae408b5958574bcc282::1727354686::res://.godot/exported/133200997/export-1c96b5e5bb4e92c6984e52e73c021d0a-static_cube.scn
+res://Entity/Player/Bullet/bullet.tscn::ae89c8b99f6e6fc9c634e7a76a18a084::1727354686::res://.godot/exported/133200997/export-7ee460f768545833b5d47c9e956a9c43-bullet.scn
+res://Entity/Player/player.tscn::0d67743cc77bb8edb8af8ba1cf61a49f::1727354701::res://.godot/exported/133200997/export-3cbaec19db2c7b2d731ae9c17ff25119-player.scn
+res://Entity/Tools/hitbox.tscn::ce92b890687bedcaac53546cd5875797::1727250695::res://.godot/exported/133200997/export-07437d0f42bd9f3abad1465199278730-hitbox.scn
+res://Entity/Tools/hurtbox.tscn::cb8bdd09f6b06bed417929f306aef14f::1727250598::res://.godot/exported/133200997/export-0b9d5540ce7d2a347a37c411cf0e52f2-hurtbox.scn
+res://Stages/Space/space.tscn::ac00ae98f84440d510273b3556a88c05::1727354698::res://.godot/exported/133200997/export-d9ffdbcaa601f5547f96e0360ae400b4-space.scn

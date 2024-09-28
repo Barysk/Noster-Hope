@@ -53,7 +53,7 @@ func _on_time_to_live_timeout() -> void:
 # Hitbox detected a Node3D
 func _on_hitbox_body_entered(body: Node3D) -> void:
 	#print(body)
-	if body.is_in_group("static_object"):
+	if body.is_in_group("static_object") or body.is_in_group("barrier"):
 		bullet_destroy()
 
 # Hitbox detected an Area3D

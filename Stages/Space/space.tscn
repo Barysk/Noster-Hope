@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=14 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
 [ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
-[ext_resource type="PackedScene" uid="uid://bknk27rl5ijps" path="res://addons/testing_object_bk/static_cube.tscn" id="3_qmy7c"]
+[ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
+[ext_resource type="PackedScene" uid="uid://dlpyagieaxtks" path="res://Entity/Tools/Barrier/barrier.tscn" id="4_o1mas"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jjf8s"]
 
@@ -13,6 +14,16 @@ sky_material = SubResource("ProceduralSkyMaterial_jjf8s")
 background_mode = 2
 sky = SubResource("Sky_eh15h")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2lvbu"]
+bg_color = Color(0.14, 0.14, 0.14, 0.501961)
+border_width_left = 15
+border_width_top = 15
+border_width_right = 15
+border_width_bottom = 15
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_detail = 1
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hu804"]
 bg_color = Color(0.26, 0.26, 0.26, 1)
 corner_radius_bottom_right = 7
@@ -22,49 +33,20 @@ corner_detail = 1
 corner_radius_bottom_right = 7
 corner_detail = 1
 
+[sub_resource type="BoxMesh" id="BoxMesh_2228f"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_v271q"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jb4na"]
+
 [node name="Space" type="Node3D"]
 script = ExtResource("1_vwde2")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 0, 0)
+transform = Transform3D(0.965926, -0.183013, 0.183013, 7.10543e-15, 0.707107, 0.707107, -0.258819, -0.683013, 0.683013, 0, 0, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_4xb7u")
-
-[node name="StaticCubes" type="Node3D" parent="."]
-
-[node name="StaticCube" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, -0.5)
-
-[node name="StaticCube2" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0, 0.5)
-
-[node name="StaticCube3" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, -0.5)
-
-[node name="StaticCube4" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0.5)
-
-[node name="StaticCube5" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, -4.5)
-
-[node name="StaticCube6" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, -4.5)
-
-[node name="StaticCube7" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 4.5)
-
-[node name="StaticCube8" parent="StaticCubes" instance=ExtResource("3_qmy7c")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 4.5)
-
-[node name="GridMap" type="GridMap" parent="." groups=["static_object"]]
-mesh_library = ExtResource("1_ws17c")
-cell_size = Vector3(1, 1, 1)
-cell_center_y = false
-data = {
-"cells": PackedInt32Array(1, 4, 0, 2, 3, 0, 3, 2, 0, 4, 1, 0, 4, 65534, 0, 3, 65533, 0, 2, 65532, 0, 1, 65531, 0, 65534, 65531, 0, 65533, 65532, 0, 65532, 65533, 0, 65531, 65534, 0, 65531, 1, 0, 65532, 2, 0, 65533, 3, 0, 65534, 4, 0, 65530, 6, 0, 65529, 5, 0, 65530, 8, 0, 65529, 9, 0, 65527, 9, 0, 65526, 8, 0, 65526, 6, 0, 65527, 5, 0, 65530, 65529, 0, 65529, 65530, 0, 65527, 65530, 0, 65526, 65529, 0, 65526, 65527, 0, 65527, 65526, 0, 65529, 65526, 0, 65530, 65527, 0, 6, 65530, 0, 5, 65529, 0, 5, 65527, 0, 6, 65526, 0, 8, 65526, 0, 9, 65527, 0, 9, 65529, 0, 8, 65530, 0, 6, 5, 0, 5, 6, 0, 5, 8, 0, 6, 9, 0, 8, 9, 0, 9, 8, 0, 9, 6, 0, 8, 5, 0, 7, 65533, 0, 7, 2, 0, 2, 7, 0, 65533, 7, 0, 65528, 2, 0, 65528, 65533, 0, 65533, 65528, 0, 2, 65528, 0, 65523, 65525, 0, 65523, 65526, 0, 65523, 65527, 0, 65523, 65528, 0, 65523, 65529, 0, 65523, 65530, 0, 65523, 65531, 0, 65523, 65532, 0, 65523, 65533, 0, 65523, 65534, 0, 65523, 65535, 0, 65523, 0, 0, 65523, 1, 0, 65523, 2, 0, 65523, 3, 0, 65523, 4, 0, 65523, 5, 0, 65523, 6, 0, 65523, 7, 0, 65523, 8, 0, 65523, 9, 0, 65523, 10, 0, 65525, 12, 0, 65526, 12, 0, 65527, 12, 0, 65528, 12, 0, 65529, 12, 0, 65530, 12, 0, 65531, 12, 0, 65532, 12, 0, 65533, 12, 0, 65534, 12, 0, 1, 12, 0, 2, 12, 0, 3, 12, 0, 4, 12, 0, 5, 12, 0, 6, 12, 0, 7, 12, 0, 8, 12, 0, 9, 12, 0, 10, 12, 0, 12, 10, 0, 12, 9, 0, 12, 8, 0, 12, 7, 0, 12, 6, 0, 12, 5, 0, 12, 4, 0, 12, 3, 0, 12, 2, 0, 12, 1, 0, 12, 0, 0, 12, 65535, 0, 12, 65534, 0, 12, 65533, 0, 12, 65532, 0, 12, 65531, 0, 12, 65530, 0, 12, 65529, 0, 12, 65528, 0, 12, 65527, 0, 12, 65526, 0, 12, 65525, 0, 65525, 65523, 0, 65526, 65523, 0, 65527, 65523, 0, 65528, 65523, 0, 65529, 65523, 0, 65530, 65523, 0, 65531, 65523, 0, 65532, 65523, 0, 65533, 65523, 0, 65534, 65523, 0, 1, 65523, 0, 2, 65523, 0, 3, 65523, 0, 4, 65523, 0, 5, 65523, 0, 6, 65523, 0, 7, 65523, 0, 8, 65523, 0, 9, 65523, 0, 10, 65523, 0, 65518, 16, 0, 65518, 15, 0, 65518, 14, 0, 65518, 13, 0, 65518, 12, 0, 65518, 11, 0, 65518, 10, 0, 65518, 9, 0, 65518, 8, 0, 65518, 7, 0, 65518, 6, 0, 65518, 5, 0, 65518, 4, 0, 65518, 3, 0, 65518, 2, 0, 65518, 1, 0, 65518, 0, 0, 65518, 65535, 0, 65518, 65534, 0, 65518, 65533, 0, 65518, 65532, 0, 65518, 65531, 0, 65518, 65530, 0, 65518, 65529, 0, 65518, 65528, 0, 65518, 65527, 0, 65518, 65526, 0, 65518, 65525, 0, 65518, 65524, 0, 65518, 65523, 0, 65518, 65522, 0, 65518, 65521, 0, 65518, 65520, 0, 65518, 65519, 0, 65518, 65518, 0, 65519, 65518, 0, 65520, 65518, 0, 65521, 65518, 0, 65522, 65518, 0, 65523, 65518, 0, 65524, 65518, 0, 65525, 65518, 0, 65526, 65518, 0, 65527, 65518, 0, 65528, 65518, 0, 65529, 65518, 0, 65530, 65518, 0, 65531, 65518, 0, 65532, 65518, 0, 65533, 65518, 0, 65534, 65518, 0, 65535, 65518, 0, 0, 65518, 0, 1, 65518, 0, 2, 65518, 0, 3, 65518, 0, 4, 65518, 0, 5, 65518, 0, 6, 65518, 0, 7, 65518, 0, 8, 65518, 0, 9, 65518, 0, 10, 65518, 0, 11, 65518, 0, 12, 65518, 0, 13, 65518, 0, 14, 65518, 0, 15, 65518, 0, 16, 65518, 0, 17, 65518, 0, 17, 65519, 0, 17, 65520, 0, 17, 65521, 0, 17, 65522, 0, 17, 65523, 0, 17, 65524, 0, 17, 65525, 0, 17, 65526, 0, 17, 65527, 0, 17, 65528, 0, 17, 65529, 0, 17, 65530, 0, 17, 65531, 0, 17, 65532, 0, 17, 65533, 0, 17, 65534, 0, 17, 65535, 0, 17, 0, 0, 17, 1, 0, 17, 2, 0, 17, 3, 0, 17, 4, 0, 17, 5, 0, 17, 6, 0, 17, 7, 0, 17, 8, 0, 17, 9, 0, 17, 10, 0, 17, 11, 0, 17, 12, 0, 17, 13, 0, 17, 14, 0, 17, 15, 0, 17, 16, 0, 17, 17, 0, 65518, 17, 0, 65519, 17, 0, 65520, 17, 0, 65521, 17, 0, 65522, 17, 0, 65523, 17, 0, 65524, 17, 0, 65525, 17, 0, 65526, 17, 0, 65527, 17, 0, 65528, 17, 0, 65529, 17, 0, 65530, 17, 0, 65531, 17, 0, 65532, 17, 0, 65533, 17, 0, 65534, 17, 0, 65535, 17, 0, 0, 17, 0, 1, 17, 0, 2, 17, 0, 3, 17, 0, 4, 17, 0, 5, 17, 0, 6, 17, 0, 7, 17, 0, 8, 17, 0, 9, 17, 0, 10, 17, 0, 11, 17, 0, 12, 17, 0, 13, 17, 0, 14, 17, 0, 15, 17, 0, 16, 17, 0, 65521, 14, 0, 14, 14, 0, 14, 65521, 0, 65521, 65521, 0)
-}
-metadata/_editor_floor_ = Vector3(0, 1, 0)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -72,12 +54,13 @@ metadata/_editor_floor_ = Vector3(0, 1, 0)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 421.0
-offset_top = 243.0
-offset_right = -420.0
-offset_bottom = -240.0
+offset_left = 159.0
+offset_top = 70.0
+offset_right = -159.0
+offset_bottom = -69.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2lvbu")
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
@@ -95,9 +78,18 @@ layout_mode = 2
 text = "Main Menu"
 horizontal_alignment = 1
 
-[node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "Host"
+
+[node name="IsOnlineCheckBox" type="CheckBox" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Online Mode"
 
 [node name="JoinButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -108,21 +100,6 @@ layout_mode = 2
 placeholder_text = "Address"
 alignment = 1
 max_length = 16
-
-[node name="UsernameLine" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
-layout_mode = 2
-placeholder_text = "Username"
-alignment = 1
-max_length = 16
-
-[node name="Warning" type="RichTextLabel" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
-visible = false
-layout_mode = 2
-text = "To Host, username is required!
-To Join, both address and username are required!"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 visible = false
@@ -161,7 +138,7 @@ layout_mode = 2
 
 [node name="Health" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "HP"
+text = "2"
 
 [node name="Separator" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -169,12 +146,39 @@ text = "|"
 
 [node name="Score" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "SCORE"
+text = "0"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")
 spawn_path = NodePath("..")
 
-[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[node name="GridMap" type="GridMap" parent="." groups=["static_object"]]
+mesh_library = ExtResource("1_ws17c")
+cell_size = Vector3(4, 4, 4)
+cell_center_y = false
+cell_scale = 4.0
+data = {
+"cells": PackedInt32Array(31, 31, 0, 30, 31, 0, 29, 31, 0, 28, 31, 0, 27, 31, 0, 26, 31, 0, 25, 31, 0, 24, 31, 0, 23, 31, 0, 22, 31, 0, 21, 31, 0, 20, 31, 0, 19, 31, 0, 18, 31, 0, 17, 31, 0, 16, 31, 0, 15, 31, 0, 14, 31, 0, 13, 31, 0, 12, 31, 0, 11, 31, 0, 10, 31, 0, 9, 31, 0, 8, 31, 0, 7, 31, 0, 6, 31, 0, 5, 31, 0, 4, 31, 0, 3, 31, 0, 2, 31, 0, 1, 31, 0, 0, 31, 0, 65535, 31, 0, 65534, 31, 0, 65533, 31, 0, 65532, 31, 0, 65531, 31, 0, 65530, 31, 0, 65529, 31, 0, 65528, 31, 0, 65527, 31, 0, 65526, 31, 0, 65525, 31, 0, 65524, 31, 0, 65523, 31, 0, 65522, 31, 0, 65521, 31, 0, 65520, 31, 0, 65519, 31, 0, 65518, 31, 0, 65517, 31, 0, 65516, 31, 0, 65515, 31, 0, 65514, 31, 0, 65513, 31, 0, 65512, 31, 0, 65511, 31, 0, 65510, 31, 0, 65509, 31, 0, 65508, 31, 0, 65507, 31, 0, 65506, 31, 0, 65505, 31, 0, 65504, 31, 0, 31, 30, 0, 31, 29, 0, 31, 28, 0, 31, 27, 0, 31, 26, 0, 31, 25, 0, 31, 24, 0, 31, 23, 0, 31, 22, 0, 31, 21, 0, 31, 20, 0, 31, 19, 0, 31, 18, 0, 31, 17, 0, 31, 16, 0, 31, 15, 0, 31, 14, 0, 31, 13, 0, 31, 12, 0, 31, 11, 0, 31, 10, 0, 31, 9, 0, 31, 8, 0, 31, 7, 0, 31, 6, 0, 31, 5, 0, 31, 4, 0, 31, 3, 0, 31, 2, 0, 31, 1, 0, 31, 0, 0, 31, 65504, 0, 31, 65505, 0, 31, 65506, 0, 31, 65507, 0, 31, 65508, 0, 31, 65509, 0, 31, 65510, 0, 31, 65511, 0, 31, 65512, 0, 31, 65513, 0, 31, 65514, 0, 31, 65515, 0, 31, 65516, 0, 31, 65517, 0, 31, 65518, 0, 31, 65519, 0, 31, 65520, 0, 31, 65521, 0, 31, 65522, 0, 31, 65523, 0, 31, 65524, 0, 31, 65525, 0, 31, 65526, 0, 31, 65527, 0, 31, 65528, 0, 31, 65529, 0, 31, 65530, 0, 31, 65531, 0, 31, 65532, 0, 31, 65533, 0, 31, 65534, 0, 31, 65535, 0, 65504, 30, 0, 65504, 29, 0, 65504, 28, 0, 65504, 27, 0, 65504, 26, 0, 65504, 25, 0, 65504, 24, 0, 65504, 23, 0, 65504, 22, 0, 65504, 21, 0, 65504, 20, 0, 65504, 19, 0, 65504, 18, 0, 65504, 17, 0, 65504, 16, 0, 65504, 15, 0, 65504, 14, 0, 65504, 13, 0, 65504, 12, 0, 65504, 11, 0, 65504, 10, 0, 65504, 9, 0, 65504, 8, 0, 65504, 7, 0, 65504, 6, 0, 65504, 5, 0, 65504, 4, 0, 65504, 3, 0, 65504, 2, 0, 65504, 1, 0, 65504, 0, 0, 65504, 65535, 0, 65504, 65534, 0, 65504, 65533, 0, 65504, 65532, 0, 65504, 65531, 0, 65504, 65530, 0, 65504, 65529, 0, 65504, 65528, 0, 65504, 65527, 0, 65504, 65526, 0, 65504, 65525, 0, 65504, 65524, 0, 65504, 65523, 0, 65504, 65522, 0, 65504, 65521, 0, 65504, 65520, 0, 65504, 65519, 0, 65504, 65518, 0, 65504, 65517, 0, 65504, 65516, 0, 65504, 65515, 0, 65504, 65514, 0, 65504, 65513, 0, 65504, 65512, 0, 65504, 65511, 0, 65504, 65510, 0, 65504, 65509, 0, 65504, 65508, 0, 65504, 65507, 0, 65504, 65506, 0, 65504, 65505, 0, 65504, 65504, 0, 65505, 65504, 0, 65506, 65504, 0, 65507, 65504, 0, 65508, 65504, 0, 65509, 65504, 0, 65510, 65504, 0, 65511, 65504, 0, 65512, 65504, 0, 65513, 65504, 0, 65514, 65504, 0, 65515, 65504, 0, 65516, 65504, 0, 65517, 65504, 0, 65518, 65504, 0, 65519, 65504, 0, 65520, 65504, 0, 65521, 65504, 0, 65522, 65504, 0, 65523, 65504, 0, 65524, 65504, 0, 65525, 65504, 0, 65526, 65504, 0, 65527, 65504, 0, 65528, 65504, 0, 65529, 65504, 0, 65530, 65504, 0, 65531, 65504, 0, 65532, 65504, 0, 65533, 65504, 0, 65534, 65504, 0, 65535, 65504, 0, 0, 65504, 0, 1, 65504, 0, 2, 65504, 0, 3, 65504, 0, 4, 65504, 0, 5, 65504, 0, 6, 65504, 0, 7, 65504, 0, 8, 65504, 0, 9, 65504, 0, 10, 65504, 0, 11, 65504, 0, 12, 65504, 0, 13, 65504, 0, 14, 65504, 0, 15, 65504, 0, 16, 65504, 0, 17, 65504, 0, 18, 65504, 0, 19, 65504, 0, 20, 65504, 0, 21, 65504, 0, 22, 65504, 0, 23, 65504, 0, 24, 65504, 0, 25, 65504, 0, 26, 65504, 0, 27, 65504, 0, 28, 65504, 0, 29, 65504, 0, 30, 65504, 0, 65531, 65535, 0, 65531, 0, 0, 65535, 4, 0, 0, 4, 0, 4, 0, 0, 4, 65535, 0, 65535, 65531, 0, 0, 65531, 0, 65532, 65532, 0, 3, 65532, 0, 3, 3, 0, 65532, 3, 0, 65522, 65517, 0, 65517, 65517, 0, 65522, 65522, 0, 65517, 65522, 0, 18, 65522, 0, 13, 65522, 0, 13, 65517, 0, 18, 65517, 0, 13, 13, 0, 18, 13, 0, 18, 18, 0, 13, 18, 0, 65522, 18, 0, 65522, 13, 0, 65517, 13, 0, 65517, 18, 0, 65530, 5, 0, 65528, 7, 0, 65526, 9, 0, 65524, 11, 0, 11, 11, 0, 9, 9, 0, 7, 7, 0, 5, 5, 0, 5, 65530, 0, 7, 65528, 0, 9, 65526, 0, 11, 65524, 0, 65530, 65530, 0, 65528, 65528, 0, 65526, 65526, 0, 65524, 65524, 0)
+}
+
+[node name="Server" parent="." instance=ExtResource("3_ige54")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, -64)
+
+[node name="Barrier" parent="." instance=ExtResource("4_o1mas")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+
+[node name="MeshInstance3D" parent="Barrier" index="0"]
+mesh = SubResource("BoxMesh_2228f")
+
+[node name="CollisionShape3D" parent="Barrier" index="1"]
+shape = SubResource("BoxShape3D_v271q")
+
+[node name="CollisionShape3D" parent="Barrier/Hurtbox" index="0"]
+shape = SubResource("BoxShape3D_jb4na")
+
+[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
+
+[editable path="Barrier"]
+[editable path="Barrier/Hurtbox"]

@@ -1,9 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=10 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
 [ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
 [ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
-[ext_resource type="PackedScene" uid="uid://dlpyagieaxtks" path="res://Entity/Tools/Barrier/barrier.tscn" id="4_o1mas"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_jjf8s"]
 
@@ -32,12 +31,6 @@ corner_detail = 1
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tv0d4"]
 corner_radius_bottom_right = 7
 corner_detail = 1
-
-[sub_resource type="BoxMesh" id="BoxMesh_2228f"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_v271q"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_jb4na"]
 
 [node name="Space" type="Node3D"]
 script = ExtResource("1_vwde2")
@@ -162,23 +155,8 @@ data = {
 }
 
 [node name="Server" parent="." instance=ExtResource("3_ige54")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, -64)
-
-[node name="Barrier" parent="." instance=ExtResource("4_o1mas")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
-
-[node name="MeshInstance3D" parent="Barrier" index="0"]
-mesh = SubResource("BoxMesh_2228f")
-
-[node name="CollisionShape3D" parent="Barrier" index="1"]
-shape = SubResource("BoxShape3D_v271q")
-
-[node name="CollisionShape3D" parent="Barrier/Hurtbox" index="0"]
-shape = SubResource("BoxShape3D_jb4na")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -33)
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
-
-[editable path="Barrier"]
-[editable path="Barrier/Hurtbox"]

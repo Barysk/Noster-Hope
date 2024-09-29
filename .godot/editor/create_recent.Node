@@ -1,6 +1,10 @@
+MultiplayerSynchronizer
 Timer
-MeshInstance3D
+Node3D
 CollisionShape3D
+MeshInstance3D
+CharacterBody3D
+Label3D
 StaticBody3D
 Area3D
 GridMap
@@ -8,8 +12,3 @@ CheckBox
 CheckButton
 Label
 HBoxContainer
-MultiplayerSynchronizer
-MultiplayerSpawner
-Button
-MarginContainer
-RichTextLabel

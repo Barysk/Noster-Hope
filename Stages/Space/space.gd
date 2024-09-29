@@ -68,7 +68,7 @@ func _on_host_button_pressed() -> void:
 	hud.show()
 	
 	# PORT initialisation
-	enet_peer.create_server(PORT)
+	enet_peer.create_server(PORT, 1)
 	multiplayer.multiplayer_peer = enet_peer
 	
 	# signals

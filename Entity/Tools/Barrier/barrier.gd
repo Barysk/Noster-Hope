@@ -49,6 +49,8 @@ func health_changed(new_health) -> void:
 func set_barrier_state(new_state : bool) -> void:
 	is_active = new_state
 
+func set_barrier_health(new_health : int) -> void:
+	health = new_health
 
 # 	[ Child Node's signals ]
 

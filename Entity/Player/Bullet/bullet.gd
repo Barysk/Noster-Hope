@@ -17,7 +17,7 @@ var player_shooter_id : String = " - PROBLEM : Bullet did not get player's id!"
 var player_target : String
 
 
-#	[ Node's functions ]
+#	[ Node functions ]
 
 func _physics_process(delta: float) -> void:
 	# Move bullet forward

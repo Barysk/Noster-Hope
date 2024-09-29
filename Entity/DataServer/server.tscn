@@ -1,21 +1,61 @@
-[gd_scene load_steps=8 format=3 uid="uid://dslka5hon8bfc"]
+[gd_scene load_steps=14 format=3 uid="uid://dslka5hon8bfc"]
 
 [ext_resource type="Script" path="res://Entity/DataServer/server.gd" id="1_e1ja8"]
-[ext_resource type="PackedScene" uid="uid://c7xo0u1ah5mxh" path="res://Entity/Tools/acception_area.tscn" id="1_tskgu"]
 [ext_resource type="PackedScene" uid="uid://cfsmx0wv5h6kj" path="res://Entity/Tools/detection_area.tscn" id="2_1gav4"]
+[ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_f5jxq"]
+[ext_resource type="PackedScene" uid="uid://dlpyagieaxtks" path="res://Entity/Tools/Barrier/barrier.tscn" id="3_2ul70"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_c0nu6"]
 size = Vector3(1, 2, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ioa4d"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_slkrq"]
-radius = 1.5
+[sub_resource type="BoxShape3D" id="BoxShape3D_0vu87"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_kw8op"]
 radius = 48.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25u83"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1, 1, 1, 0.25098)
+refraction_scale = 0.03
+
+[sub_resource type="SphereMesh" id="SphereMesh_db8am"]
+material = SubResource("StandardMaterial3D_25u83")
+radius = 2.5
+height = 5.0
+radial_segments = 8
+rings = 3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_171rs"]
+radius = 2.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6e521"]
+radius = 2.5
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p4a1y"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:affiliation")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:affiliation_id")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:bullet_rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:direction_changed")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:attack_mode")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+
 [node name="Server" type="StaticBody3D"]
+collision_mask = 0
 script = ExtResource("1_e1ja8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -24,18 +64,44 @@ mesh = SubResource("BoxMesh_c0nu6")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_ioa4d")
 
-[node name="AcceptionArea" parent="." instance=ExtResource("1_tskgu")]
+[node name="Hurtbox" parent="." instance=ExtResource("2_f5jxq")]
 
-[node name="CollisionShape3D" parent="AcceptionArea" index="0"]
-shape = SubResource("SphereShape3D_slkrq")
+[node name="CollisionShape3D" parent="Hurtbox" index="0"]
+shape = SubResource("BoxShape3D_0vu87")
 
 [node name="DetectionArea" parent="." instance=ExtResource("2_1gav4")]
 
 [node name="CollisionShape3D" parent="DetectionArea" index="0"]
 shape = SubResource("SphereShape3D_kw8op")
 
-[connection signal="body_entered" from="AcceptionArea" to="." method="_on_acception_area_body_entered"]
+[node name="Barrier" parent="." instance=ExtResource("3_2ul70")]
+
+[node name="MeshInstance3D" parent="Barrier" index="0"]
+mesh = SubResource("SphereMesh_db8am")
+
+[node name="CollisionShape3D" parent="Barrier" index="1"]
+shape = SubResource("SphereShape3D_171rs")
+
+[node name="CollisionShape3D" parent="Barrier/Hurtbox" index="0"]
+shape = SubResource("SphereShape3D_6e521")
+
+[node name="AffiliationLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74749, 0)
+billboard = 1
+text = "Neutrall"
+font_size = 128
+uppercase = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_p4a1y")
+
+[node name="AttackTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 
-[editable path="AcceptionArea"]
+[editable path="Hurtbox"]
 [editable path="DetectionArea"]
+[editable path="Barrier"]
+[editable path="Barrier/Hurtbox"]

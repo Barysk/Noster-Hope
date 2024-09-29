@@ -22,7 +22,7 @@ const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
 
 #	[ Constants ]
 
-const SPEED = 10.0			## Max speed
+const SPEED = 20.0			## Max speed
 const HEALTH : int = 2		## Max health
 const ENERGY : int = 100	## Max energy
 
@@ -66,7 +66,7 @@ func set_score(new_score) -> void:
 	score_changed.emit(score)
 
 
-#	[ Node's functions ]
+#	[ Node functions ]
 
 func _enter_tree() -> void:
 	# name already is uniq, this made in the space.gd when the player is instantiated

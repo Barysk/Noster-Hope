@@ -19,7 +19,6 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
-window/size/mode=2
 window/stretch/mode="viewport"
 
 [file_customization]
@@ -38,6 +37,7 @@ static_object="Object that does not move"
 player="Players are in this group "
 player_bullet="Bullet that was shot by a player"
 barrier=""
+server_bullet=""
 
 [input]
 

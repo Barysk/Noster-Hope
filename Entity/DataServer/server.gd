@@ -83,7 +83,7 @@ func attack_with_pattern(pattern : int):
 		1:
 			twisted_stream(0.005, 60, 120, 12, 0, 5.0)
 		2:
-			twisted_stream(0.01, 10, 30, 10, 0, 5.0)
+			twisted_stream(0.01, 10, 30, 10, 20, 5.0)
 		3:
 			twisted_4stream(0.2, 5, 5, 15, 10, 3.5)
 
@@ -180,4 +180,4 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 
 # Detection Area Signal
 func _on_detection_area_body_entered(body: Node3D) -> void:
-	print("Body ", body, " is in detection area")
+	print("Body ", body, " is in detection area, and its position is ", body.global_position)

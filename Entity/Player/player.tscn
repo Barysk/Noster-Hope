@@ -38,8 +38,9 @@ mesh = SubResource("BoxMesh_rj8df")
 shape = SubResource("SphereShape3D_qbaak")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 2.08616e-07, 1, 0, -1, 2.08616e-07, 0, 9, -3.31252)
+transform = Transform3D(1, 0, 0, 0, 2.08616e-07, 1, 0, -1, 2.08616e-07, 0, 14, -0.31252)
 fov = 120.0
+size = 31.256
 
 [node name="Attack_Source" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)

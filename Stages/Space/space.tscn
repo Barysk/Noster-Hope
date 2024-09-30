@@ -146,6 +146,7 @@ _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")
 spawn_path = NodePath("..")
 
 [node name="GridMap" type="GridMap" parent="." groups=["static_object"]]
+visible = false
 mesh_library = ExtResource("1_ws17c")
 cell_size = Vector3(4, 4, 4)
 cell_center_y = false

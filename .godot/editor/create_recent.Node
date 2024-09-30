@@ -1,8 +1,8 @@
-MultiplayerSynchronizer
 Timer
+MeshInstance3D
+MultiplayerSynchronizer
 Node3D
 CollisionShape3D
-MeshInstance3D
 CharacterBody3D
 Label3D
 StaticBody3D

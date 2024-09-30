@@ -16,7 +16,7 @@ script = ExtResource("1_sd03x")
 mesh = SubResource("BoxMesh_785ll")
 
 [node name="TimeToLive" type="Timer" parent="."]
-wait_time = 100.5
+wait_time = 0.5
 one_shot = true
 autostart = true
 

@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://bg2sc10wnyumh"]
+
+[ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="1_oklae"]
+[ext_resource type="Script" path="res://Entity/DataServer/Projectiles/bullet_targeted.gd" id="1_p0ofd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wgq8w"]
+albedo_color = Color(0.33, 0.732, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.0499997, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_gud7a"]
+material = SubResource("StandardMaterial3D_wgq8w")
+radius = 0.3
+height = 0.6
+radial_segments = 8
+rings = 3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_m8fub"]
+radius = 0.25
+
+[node name="BulletTargeted" type="Node3D"]
+script = ExtResource("1_p0ofd")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_gud7a")
+
+[node name="TimeToLive" type="Timer" parent="."]
+one_shot = true
+
+[node name="ToolTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="Hitbox" parent="." instance=ExtResource("1_oklae")]
+
+[node name="CollisionShape3D" parent="Hitbox" index="0"]
+shape = SubResource("SphereShape3D_m8fub")
+
+[connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
+
+[editable path="Hitbox"]

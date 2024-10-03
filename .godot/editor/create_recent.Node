@@ -1,6 +1,6 @@
 Timer
-MeshInstance3D
 MultiplayerSynchronizer
+MeshInstance3D
 Node3D
 CollisionShape3D
 CharacterBody3D

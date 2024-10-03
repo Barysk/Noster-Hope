@@ -25,20 +25,22 @@ var enemy_body : CharacterBody3D = null
 var state : State = State.SIDE_FLY
 var state_change_time_from : float
 var state_change_time_to : float
-
+var last_randf_value : float
 
 #	[ Node functions ] 
 
 func _ready() -> void:
 	time_to_live.start(wait_time)
-	tool_timer.start(randf_range(state_change_time_from, state_change_time_to))
+	set_randf_value(state_change_time_from, state_change_time_to)
+	tool_timer.start(last_randf_value)
 
 func _physics_process(delta: float) -> void:
 	match state:
 		State.SIDE_FLY:
-			position += transform.basis * Vector3(0,0,-speed/2) * delta
+			position += transform.basis * Vector3(0,0,-15) * delta
 			if tool_timer.is_stopped():
-				tool_timer.start(randf_range(state_change_time_from, state_change_time_to))
+				set_randf_value(state_change_time_from, state_change_time_to)
+				tool_timer.start(last_randf_value)
 				state = State.STOPPED
 		State.STOPPED:
 			if enemy_body != null:
@@ -47,6 +49,10 @@ func _physics_process(delta: float) -> void:
 				state = State.FYING_TO_GOT_POSITION
 		State.FYING_TO_GOT_POSITION:
 			position += transform.basis * Vector3(0,0,-speed) * delta
+
+# made for sync purpose
+func set_randf_value(from, to):
+	last_randf_value = randf_range(from, to)
 
 
 #	[ My functions ]

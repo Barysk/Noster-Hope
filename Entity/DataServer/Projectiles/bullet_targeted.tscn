@@ -12,16 +12,18 @@ emission = Color(0, 0.0499997, 1, 1)
 material = SubResource("StandardMaterial3D_wgq8w")
 radius = 0.3
 height = 0.6
-radial_segments = 8
-rings = 3
+radial_segments = 4
+rings = 1
+is_hemisphere = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_m8fub"]
-radius = 0.25
+radius = 0.182439
 
 [node name="BulletTargeted" type="Node3D"]
 script = ExtResource("1_p0ofd")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
 mesh = SubResource("SphereMesh_gud7a")
 
 [node name="TimeToLive" type="Timer" parent="."]
@@ -33,6 +35,7 @@ one_shot = true
 [node name="Hitbox" parent="." instance=ExtResource("1_oklae")]
 
 [node name="CollisionShape3D" parent="Hitbox" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.186194)
 shape = SubResource("SphereShape3D_m8fub")
 
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]

@@ -52,7 +52,22 @@ properties/4/spawn = true
 properties/4/replication_mode = 2
 properties/5/path = NodePath(".:attack_mode")
 properties/5/spawn = true
-properties/5/replication_mode = 1
+properties/5/replication_mode = 2
+properties/6/path = NodePath(".:bullet_rotation_alt")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:direction_changed_alt")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:init_rotation")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath(".:last_rand_val_int")
+properties/9/spawn = true
+properties/9/replication_mode = 2
+properties/10/path = NodePath(".:last_rand_val_float")
+properties/10/spawn = true
+properties/10/replication_mode = 2
 
 [node name="Server" type="StaticBody3D"]
 collision_mask = 0

@@ -22,7 +22,8 @@ const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
 
 #	[ Constants ]
 
-const SPEED = 20.0			## Max speed
+const SPEED : float = 20.0			## Max speed
+const ROTATION_SPEED : float = 180	## Max rotation speed
 const HEALTH : int = 2		## Max health
 const ENERGY : int = 100	## Max energy
 
@@ -30,6 +31,7 @@ const ENERGY : int = 100	## Max energy
 #	[ Variables ]
 
 @onready var speed : float = SPEED						## actual speed
+@onready var rotation_speed : float = ROTATION_SPEED	## actual rotation speed
 @onready var health : int = HEALTH : set = set_health	## actual health
 @onready var energy : int = ENERGY : set = set_energy	## actual energy
 @onready var score : int = 0 : set = set_score			## actual score
@@ -92,8 +94,10 @@ func _physics_process(delta: float) -> void:
 	# Handle slow down
 	if Input.is_action_pressed("slow_down"):
 		speed = SPEED / 2
+		rotation_speed = ROTATION_SPEED / 2
 	else:
 		speed = SPEED
+		rotation_speed = ROTATION_SPEED
 
 	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
@@ -102,9 +106,9 @@ func _physics_process(delta: float) -> void:
 
 	# Handle player rotation
 	if Input.is_action_pressed("rotate_left"):
-		rotation.y += deg_to_rad(180) *  delta
+		rotation.y += deg_to_rad(rotation_speed) *  delta
 	elif Input.is_action_pressed("rotate_right"):
-		rotation.y -= deg_to_rad(180) *  delta
+		rotation.y -= deg_to_rad(rotation_speed) *  delta
 
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector("left", "right", "up", "down")

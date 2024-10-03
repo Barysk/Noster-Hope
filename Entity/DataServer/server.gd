@@ -5,6 +5,8 @@ extends StaticBody3D
 
 const ROUND_BULLET = preload("res://Entity/DataServer/Projectiles/round_bullet.tscn")
 const BULLET_TARGETED = preload("res://Entity/DataServer/Projectiles/bullet_targeted.tscn")
+const BULLET_RANDOM = preload("res://Entity/DataServer/Projectiles/bullet_random.tscn")
+
 
 #	[ Attached Child Nodes ]
 
@@ -43,6 +45,9 @@ var direction_changed : bool = false
 var direction_changed_alt : bool = false
 
 var attack_mode : int = 0
+
+var last_rand_val_int : int = 0
+var last_rand_val_float : float = 0
 
 var enemy_in_area : Array
 var enemy : CharacterBody3D
@@ -99,15 +104,32 @@ func attack_with_pattern(pattern : int):
 		0:
 			pass
 		1:	# Normal Bullet Stream
-			twisted_N_stream(0.005, 60, 120, 12, 0, 5.0, 1, false)
+			twisted_N_stream(0.005, 60, 120, 12, 0, 5, 1, false)
 		2:	# Easy Bullet Stream
-			twisted_N_stream(0.01, 10, 30, 10, 20, 5.0, 1, false)
-		3:	# Easy Bullet 4Stream
-			twisted_N_stream(0.1, 5, 6, 8, 0, 3.5, 8, false)
-			twisted_N_stream(0.1, 5, 6, 10, 0, 3.5, 8, true)
+			twisted_N_stream(0.01, 10, 30, 10, 20, 5, 1, false)
+		5:	# Easy Bullet 4Stream with wery rare circle 1/100
+			twisted_N_stream(0.1, 5, 6, 10, 0, 5, 4, false)
+			if get_rand_val_int(0, 100) == 0:
+				twisted_N_stream(0.1, 0, 0, 13, 0, 3.5, 32, false)
 		4:	# Easy Targeted bullet stream
-			targeted_bullet(0.1, 3, 3, 25, 0, 15, 1, 1)
+			targeted_bullet(0.01, 0, 360, 25, 0, 15, 3, 4)
+		3:
+			random_bullet(0.01, 5, 6, 0, 5, 10, 0.7)
+		
+		6:	# Hard Flower Shape Stream TODO second timer for circle
+			twisted_N_stream(0.1, 5, 6, 10, 0, 3.5, 6, false)
+			twisted_N_stream(0.1, 5, 6, 10, 0, 3.5, 6, true)
+			if get_rand_val_int(0, 10) == 5:
+				twisted_N_stream(0.1, 0, 0, 10, 0, 3.5, 50, false)
 
+# Need those for proper property synchronise
+func get_rand_val_int(from : int, to : int) -> int:
+	last_rand_val_int = randi_range(from, to)
+	return last_rand_val_int
+
+func get_rand_val_float(from : float, to : float) -> float:
+	last_rand_val_float = randf_range(from, to)
+	return last_rand_val_float
 
 
 #	[ BulletHell patterns ]
@@ -144,7 +166,6 @@ func twisted_N_stream(wait_time : float, rand_angle_from : int, rand_angle_to : 
 	
 	init_rotation = 0
 
-
 #	stream of bullets, that are aiming at enemy
 func targeted_bullet(wait_time : float, rand_angle_from : int, rand_angle_to : int, bullet_speed : int, random_change_direction : int, bullet_live_time : float, states_change_time_from : float, states_change_time_to : float):
 	if affiliation != null and enemy != null:
@@ -159,40 +180,55 @@ func targeted_bullet(wait_time : float, rand_angle_from : int, rand_angle_to : i
 		bullet.bullet_initiate(bullet_speed, bullet_live_time, enemy, states_change_time_from, states_change_time_to)
 		get_parent().add_child(bullet, true)
 
+# bullet_speed : float, bullet_live_time : float, change_state_time : float
+# Stream of random direction bullets
+func random_bullet(wait_time: float, rand_angle_from : int, rand_angle_to :int, random_change_direction : bool, bullet_speed : float, bullet_live_time : float, change_state_time : float):
+	
+	# Maybe it will be changed on for example circle spawn?
+	rotate_projectile_source(wait_time, rand_angle_from, rand_angle_to, random_change_direction, false)
+	
+	var bullet = BULLET_RANDOM.instantiate()
+	bullet.position = global_position
+	bullet.rotation.y = deg_to_rad(bullet_rotation)
+	bullet.name = "ServerRandomBullet_"
+	bullet.bullet_initiate(bullet_speed, bullet_live_time, change_state_time)
+	get_parent().add_child(bullet, true)
+
 #	func that rotates projectile source
 func rotate_projectile_source(wait_time : float, rand_angle_from : int, rand_angle_to : int, random_change_direction : int, is_alternative : bool):
 	if not is_alternative:
 		if random_change_direction == 0:
 			pass
-		elif randi_range(0,random_change_direction) == random_change_direction:
+		elif get_rand_val_int(0,random_change_direction) == random_change_direction:
 			if direction_changed == false:
 				direction_changed = true
 			elif direction_changed == true:
 				direction_changed = false 
 		
 		if not direction_changed:
-			bullet_rotation += randf_range(rand_angle_from, rand_angle_to)
+			bullet_rotation += get_rand_val_float(rand_angle_from, rand_angle_to)
 		else:
-			bullet_rotation -= randf_range(rand_angle_from, rand_angle_to)
+			bullet_rotation -= get_rand_val_float(rand_angle_from, rand_angle_to)
 		
 		if bullet_rotation >= 360:
 			bullet_rotation = bullet_rotation - 360
 		elif bullet_rotation <= -360:
 			bullet_rotation = bullet_rotation + 360
 		attack_timer.start(wait_time)
+
 	elif is_alternative:
 		if random_change_direction == 0:
 			pass
-		elif randi_range(0,random_change_direction) == random_change_direction:
+		elif get_rand_val_int(0,random_change_direction) == random_change_direction:
 			if direction_changed_alt == false:
 				direction_changed_alt = true
 			elif direction_changed_alt == true:
 				direction_changed_alt = false 
 		
 		if not direction_changed_alt:
-			bullet_rotation_alt -= randf_range(rand_angle_from, rand_angle_to)
+			bullet_rotation_alt -= get_rand_val_float(rand_angle_from, rand_angle_to)
 		else:
-			bullet_rotation_alt += randf_range(rand_angle_from, rand_angle_to)
+			bullet_rotation_alt += get_rand_val_float(rand_angle_from, rand_angle_to)
 		
 		if bullet_rotation_alt >= 360:
 			bullet_rotation_alt = bullet_rotation_alt - 360

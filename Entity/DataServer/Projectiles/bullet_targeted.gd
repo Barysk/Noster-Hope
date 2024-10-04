@@ -4,7 +4,7 @@ extends Node3D
 #	[ Attached Child Nodes ]
 
 @onready var time_to_live: Timer = $TimeToLive
-@onready var tool_timer: Timer = $ToolTimer
+@onready var change_state_timer: Timer = $ChangeStateTimer
 
 
 #	[ State ]
@@ -12,57 +12,52 @@ extends Node3D
 enum State{
 	SIDE_FLY,
 	STOPPED,
-	FYING_TO_GOT_POSITION
+	FLYING_TO_GOT_POSITION
 }
 
 
 #	[ Variables ]
 
 #var ally_is : CharacterBody3D = null
-var speed : float = 10
-var wait_time : float = 5
-var enemy_body : CharacterBody3D = null
-var state : State = State.SIDE_FLY
-var state_change_time_from : float
-var state_change_time_to : float
-var last_randf_value : float
+var speed : float = 10					## bullet's speed
+var wait_time : float = 5				## time of bullets existance after being fired
+var enemy_body : CharacterBody3D = null	## enemy's node, for tracking it's position
+var state : State = State.SIDE_FLY		## Internal State
+var state_time : float					## time after which bullet changes it's internal state
 
 #	[ Node functions ] 
 
 func _ready() -> void:
+	if enemy_body == null:
+		print("Got body for bullet ", name, " is null!")
+		bullet_destroy()
+		
 	time_to_live.start(wait_time)
-	set_randf_value(state_change_time_from, state_change_time_to)
-	tool_timer.start(last_randf_value)
+	
+	if state_time != 0:
+		change_state_timer.start(state_time)
+	else:
+		state = State.STOPPED
+		change_state_timer.start(0.1)
 
 func _physics_process(delta: float) -> void:
 	match state:
 		State.SIDE_FLY:
-			position += transform.basis * Vector3(0,0,-15) * delta
-			if tool_timer.is_stopped():
-				set_randf_value(state_change_time_from, state_change_time_to)
-				tool_timer.start(last_randf_value)
-				state = State.STOPPED
+			position += transform.basis * Vector3(0,0,-speed/1.5) * delta
 		State.STOPPED:
 			if enemy_body != null:
 				look_at(enemy_body.global_transform.origin)
-			if tool_timer.is_stopped():
-				state = State.FYING_TO_GOT_POSITION
-		State.FYING_TO_GOT_POSITION:
+		State.FLYING_TO_GOT_POSITION:
 			position += transform.basis * Vector3(0,0,-speed) * delta
-
-# made for sync purpose
-func set_randf_value(from, to):
-	last_randf_value = randf_range(from, to)
 
 
 #	[ My functions ]
 
-func bullet_initiate(bullet_speed : float, bullet_live_time : float, enemy : CharacterBody3D, state_change_time_from_param : float, state_change_time_to_param : float) -> void:
+func bullet_initiate(bullet_speed : float, bullet_live_time : float, change_state_time : float, enemy : CharacterBody3D) -> void:
 	speed = bullet_speed
 	wait_time = bullet_live_time
 	enemy_body = enemy
-	state_change_time_from = state_change_time_from_param
-	state_change_time_to = state_change_time_to_param
+	state_time = change_state_time
 
 func bullet_destroy() -> void:
 	# Add some fancy effect later
@@ -73,3 +68,13 @@ func bullet_destroy() -> void:
 
 func _on_time_to_live_timeout() -> void:
 	bullet_destroy()
+
+func _on_change_state_timer_timeout() -> void:
+	match state:
+		State.SIDE_FLY:
+			state = State.STOPPED
+			change_state_timer.start(state_time)
+		State.STOPPED:
+			state = State.FLYING_TO_GOT_POSITION
+		_:
+			pass

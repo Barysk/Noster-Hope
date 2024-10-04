@@ -44,30 +44,33 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath(".:affiliation_id")
 properties/2/spawn = true
 properties/2/replication_mode = 2
-properties/3/path = NodePath(".:bullet_rotation")
+properties/3/path = NodePath(".:init_rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 2
-properties/4/path = NodePath(".:direction_changed")
+properties/4/path = NodePath(".:last_rand_val_int")
 properties/4/spawn = true
 properties/4/replication_mode = 2
-properties/5/path = NodePath(".:attack_mode")
+properties/5/path = NodePath(".:last_rand_val_float")
 properties/5/spawn = true
 properties/5/replication_mode = 2
-properties/6/path = NodePath(".:bullet_rotation_alt")
+properties/6/path = NodePath(".:bullet_rotation_axis_1")
 properties/6/spawn = true
 properties/6/replication_mode = 2
-properties/7/path = NodePath(".:direction_changed_alt")
+properties/7/path = NodePath(".:bullet_rotation_axis_2")
 properties/7/spawn = true
 properties/7/replication_mode = 2
-properties/8/path = NodePath(".:init_rotation")
+properties/8/path = NodePath(".:bullet_rotation_axis_3")
 properties/8/spawn = true
 properties/8/replication_mode = 2
-properties/9/path = NodePath(".:last_rand_val_int")
+properties/9/path = NodePath(".:direction_changed_on_axis_1")
 properties/9/spawn = true
 properties/9/replication_mode = 2
-properties/10/path = NodePath(".:last_rand_val_float")
+properties/10/path = NodePath(".:direction_changed_on_axis_2")
 properties/10/spawn = true
 properties/10/replication_mode = 2
+properties/11/path = NodePath(".:direction_changed_on_axis_3")
+properties/11/spawn = true
+properties/11/replication_mode = 2
 
 [node name="Server" type="StaticBody3D"]
 collision_mask = 0
@@ -110,7 +113,13 @@ uppercase = true
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_p4a1y")
 
-[node name="AttackTimer" type="Timer" parent="."]
+[node name="AttackCoolDownTimer_1" type="Timer" parent="."]
+one_shot = true
+
+[node name="AttackCoolDownTimer_2" type="Timer" parent="."]
+one_shot = true
+
+[node name="AttackCoolDownTimer_3" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

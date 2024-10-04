@@ -29,7 +29,7 @@ mesh = SubResource("SphereMesh_gud7a")
 [node name="TimeToLive" type="Timer" parent="."]
 one_shot = true
 
-[node name="ToolTimer" type="Timer" parent="."]
+[node name="ChangeStateTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="Hitbox" parent="." instance=ExtResource("1_oklae")]
@@ -39,5 +39,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.186194)
 shape = SubResource("SphereShape3D_m8fub")
 
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
+[connection signal="timeout" from="ChangeStateTimer" to="." method="_on_change_state_timer_timeout"]
 
 [editable path="Hitbox"]

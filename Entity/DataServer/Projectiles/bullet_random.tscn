@@ -29,12 +29,13 @@ mesh = SubResource("SphereMesh_ccrhl")
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_jbs4l")
 
-[node name="Timer_0" type="Timer" parent="."]
+[node name="ChangeStateTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="TimeToLive" type="Timer" parent="."]
 one_shot = true
 
+[connection signal="timeout" from="ChangeStateTimer" to="." method="_on_change_state_timer_timeout"]
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
 
 [editable path="Hitbox"]

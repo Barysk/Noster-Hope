@@ -6,7 +6,7 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0ax2l"]
 albedo_color = Color(1, 0, 0, 1)
 emission_enabled = true
-emission = Color(1, 0.133333, 0, 1)
+emission = Color(0.53, 0.0706667, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_qiljn"]
 material = SubResource("StandardMaterial3D_0ax2l")
@@ -25,7 +25,6 @@ script = ExtResource("1_f5ib0")
 mesh = SubResource("SphereMesh_qiljn")
 
 [node name="TimeToLive" type="Timer" parent="."]
-wait_time = 5.0
 one_shot = true
 
 [node name="Hitbox" parent="." groups=["server_bullet"] instance=ExtResource("1_d55by")]
@@ -33,6 +32,10 @@ one_shot = true
 [node name="CollisionShape3D" parent="Hitbox" index="0"]
 shape = SubResource("SphereShape3D_are6o")
 
+[node name="ChangeStateTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
+[connection signal="timeout" from="ChangeStateTimer" to="." method="_on_change_state_timer_timeout"]
 
 [editable path="Hitbox"]

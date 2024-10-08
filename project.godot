@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
+window/size/viewport_width=960
+window/size/viewport_height=540
 window/stretch/mode="viewport"
 
 [file_customization]
@@ -38,6 +38,7 @@ player="Players are in this group "
 player_bullet="Bullet that was shot by a player"
 barrier=""
 server_bullet=""
+player_spawn_point=""
 
 [input]
 

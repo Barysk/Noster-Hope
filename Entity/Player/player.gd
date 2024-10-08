@@ -39,6 +39,7 @@ const ENERGY : int = 100	## Max energy
 @onready var shooter : Node = null 		## Shot last by a Node. Other Player or some other enemy
 @onready var shooter_id : String = ""
 
+
 #	[ Setters ]
 
 func set_health(new_health : int) -> void:
@@ -78,6 +79,8 @@ func _ready() -> void:
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
+	
+	spawn()
 	
 	# Set the corresponding camera to a player
 	camera_3d.current = true
@@ -125,6 +128,15 @@ func _physics_process(delta: float) -> void:
 
 #	[ My functions ]
 
+func spawn() -> void:
+	if name == str(1):
+		position = Vector3(-128,0,-128)
+		rotation = Vector3(0,deg_to_rad(-135),0)
+	else:
+		position = Vector3(128,0,128)
+		rotation = Vector3(0,deg_to_rad(45),0)
+
+
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)
 func attack() -> void:
@@ -134,6 +146,7 @@ func attack() -> void:
 	bullet.name = "Bullet_1"
 	bullet.bullet_initiate(name)
 	get_parent().add_child(bullet, true)
+
 
 func add_score(value : int) -> void:
 	score += value

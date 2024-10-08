@@ -120,8 +120,8 @@ func attack_with_pattern(pattern : int):
 			bulletNStream(1, 1, 1, 0, 0, 2, 0, 15, 10, 2, 0, enemy)
 			
 		5: # Medium - Flower
-			bulletNStream(6, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
-			bulletNStream(6, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
+			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
+			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
 			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
 
 # Need those for proper property synchronise

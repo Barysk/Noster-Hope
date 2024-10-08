@@ -19,6 +19,10 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var energy_bar: ProgressBar = $CanvasLayer/HUD/MarginContainer/VBoxContainer/EnergyBar
 @onready var score_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Score
 
+#	[ Variables ]
+
+@onready var index : int = 0
+
 
 #	[ Network ]
 
@@ -36,8 +40,14 @@ func add_player(peer_id) -> void:
 	var player = PLAYER.instantiate()
 	# setting player's name as unique id, will be handy later
 	player.name = str(peer_id)
-	
 	add_child(player)
+	
+	# Spawning at spawnpoints
+	#for spawn in get_tree().get_nodes_in_group("player_spawn_point"):
+		#if spawn.name == str(index):
+			#player.global_position = spawn.global_position
+			#player.rotation.y = spawn.rotation.y + deg_to_rad(randi_range(-30, 30))
+	#index += 1
 	
 	# connecting to corresponding player signal to update the HUD
 	if player.is_multiplayer_authority():

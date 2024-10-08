@@ -1,7 +1,8 @@
+Node3D
+Node
 Timer
 MultiplayerSynchronizer
 MeshInstance3D
-Node3D
 CollisionShape3D
 CharacterBody3D
 Label3D
@@ -11,4 +12,3 @@ GridMap
 CheckBox
 CheckButton
 Label
-HBoxContainer

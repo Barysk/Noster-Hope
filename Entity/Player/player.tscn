@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dbif1sjlyi52h"]
+[gd_scene load_steps=11 format=3 uid="uid://dbif1sjlyi52h"]
 
 [ext_resource type="Script" path="res://Entity/Player/player.gd" id="1_k1fa2"]
 [ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_tgjul"]
@@ -21,6 +21,24 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_68vjd"]
+radius = 0.1
+height = 0.2
+radial_segments = 4
+rings = 1
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h7s8p"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.25098)
+
+[sub_resource type="SphereMesh" id="SphereMesh_cefhs"]
+material = SubResource("StandardMaterial3D_h7s8p")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 2
@@ -56,6 +74,43 @@ shape = SubResource("SphereShape3D_t026s")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_ghcvq")
+
+[node name="DirectionToServer1" type="Node3D" parent="."]
+
+[node name="Arrow" type="MeshInstance3D" parent="DirectionToServer1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.71521)
+mesh = SubResource("SphereMesh_68vjd")
+skeleton = NodePath("../..")
+
+[node name="DirectionToServer2" type="Node3D" parent="."]
+
+[node name="Arrow" type="MeshInstance3D" parent="DirectionToServer2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.71521)
+mesh = SubResource("SphereMesh_68vjd")
+skeleton = NodePath("../..")
+
+[node name="DirectionToServer3" type="Node3D" parent="."]
+
+[node name="Arrow" type="MeshInstance3D" parent="DirectionToServer3"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -0.7)
+mesh = SubResource("SphereMesh_68vjd")
+skeleton = NodePath("../..")
+
+[node name="HealthBomb1" type="Node3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+
+[node name="Arrow" type="MeshInstance3D" parent="HealthBomb1"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -1.25)
+mesh = SubResource("SphereMesh_cefhs")
+skeleton = NodePath("../..")
+
+[node name="HealthBomb2" type="Node3D" parent="."]
+transform = Transform3D(1.31134e-07, 0, 1, 0, 1, 0, -1, 0, 1.31134e-07, 0, 0, 0)
+
+[node name="Arrow" type="MeshInstance3D" parent="HealthBomb2"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, -1.25)
+mesh = SubResource("SphereMesh_cefhs")
+skeleton = NodePath("../..")
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 

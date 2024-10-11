@@ -79,10 +79,16 @@ func health_changed(new_health):
 
 func _process(_delta: float) -> void:
 	if affiliation == null and not enemy_in_area.is_empty():
-		attack_with_pattern(5)
+		attack_with_pattern(health)
+
 	else:
-		if enemy != null:
-			attack_with_pattern(4)
+		if enemy != null and health != 0:
+			attack_with_pattern(health+3)
+			# 4 Hard ( Hard Random & Mid Targeted )
+			# 5 Mid ( Mid Random & Hard Targeted)
+			# 6 Mid ( Mid Targeted )
+
+
 
 
 
@@ -98,31 +104,26 @@ func attack_with_pattern(pattern : int):
 			pass
 		1: # Easy
 			bulletNStream(1, 1, 0.005, 60, 120, 1, 0, 12, 5, 3, 1)
+			bulletNStream(4, 2, get_rand_val_float(0.5, 1), 45, 45, 3, 0, 10, 12, 1, 0, null, 30, -0.1)
 		2: # Easy + Rand
-			bulletNStream(3, 1, 0.2, 5, 6, 1, 0, 10, 10, 3, 1)
-			bulletNStream(70, 2, 5, 45, 45, 3, 0, 10, 12, 1, 2, null, 30, 2)
+			bulletNStream(5, 1, 0.3, 5, 6, 1, 0, 10, 6, 4, 1)
+			bulletNStream(5, 2, 0.3, -5, -6, 1, 0, 10, 6, 4, 2)
+			bulletNStream(50, 3, 5, 45, 45, 3, 0, 10, 12, 1, 3, null, 30, 2)
 		3: # Easy double
-			## GOOD, IT STAYS HERE
-			#bulletNStream(3, 1, 0.2, 5, 6, 1, 0, 10, 10, 3, 1)
-			#bulletNStream(3, 2, 0.2, -5, -6, 1, 0, 10, 10, 3, 2)
-			##
-			
-			# Good one Mid difficulty let say
-			#bulletNStream(1, 1, 0.01, 0, 0, 3, 0, 7, 12, get_rand_val_float(1, 3), 0, null, 50, -0.99)
-			
-			# Medium Flower
-			#bulletNStream(6, 1, 0.2, 5, 6, 1, 0, 10, 10, 0, 1)
-			#bulletNStream(6, 2, 0.2, -5, -6, 1, 0, 10, 10, 0, 2)
-			#bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 0, 3)
-			
-			pass
-		4: # Medium
-			bulletNStream(1, 1, 1, 0, 0, 2, 0, 15, 10, 2, 0, enemy)
-			
-		5: # Medium - Flower
 			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
 			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
+
+		4: # Hard ( Hard Random & Mid Targeted )
+			bulletNStream(1, 1, 1, 0, 0, 2, 0, 15, 10, 2, 0, enemy)
+			
+		5: # Mid ( Mid Random & Hard Targeted)
+			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
+			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
+			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
+		
+		6: # Mid ( Mid Targeted )
+			pass
 
 # Need those for proper property synchronise
 func get_rand_val_int(from : int, to : int) -> int:

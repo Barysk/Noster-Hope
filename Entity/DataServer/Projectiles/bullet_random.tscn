@@ -16,14 +16,14 @@ rings = 1
 [sub_resource type="SphereShape3D" id="SphereShape3D_jbs4l"]
 radius = 0.4
 
-[node name="Bullet_Random" type="Node3D"]
+[node name="Bullet_Random" type="Node3D" groups=["server_bullet"]]
 script = ExtResource("1_fc6lg")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("SphereMesh_ccrhl")
 
-[node name="Hitbox" parent="." instance=ExtResource("2_bsntl")]
+[node name="Hitbox" parent="." groups=["server_bullet"] instance=ExtResource("2_bsntl")]
 
 [node name="CollisionShape3D" parent="Hitbox" index="0"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0, 0)

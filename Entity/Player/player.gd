@@ -19,6 +19,15 @@ const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
 @onready var attack_source: Node3D = $Attack_Source
 @onready var camera_3d: Camera3D = $Camera3D
 
+@onready var server_1: StaticBody3D = $/root/Space/Server1
+@onready var server_2: StaticBody3D = $/root/Space/Server2
+@onready var server_3: StaticBody3D = $/root/Space/Server3
+
+@onready var direction_to_server_1: Node3D = $DirectionToServer1
+@onready var direction_to_server_2: Node3D = $DirectionToServer2
+@onready var direction_to_server_3: Node3D = $DirectionToServer3
+
+
 
 #	[ Constants ]
 
@@ -49,7 +58,7 @@ func set_health(new_health : int) -> void:
 		if health <= -1:
 			shooter.add_score(100)
 			health = HEALTH
-			position = Vector3.ZERO
+			spawn()
 	else:
 		health = clamp(new_health, 0, HEALTH)
 	
@@ -76,9 +85,17 @@ func _enter_tree() -> void:
 	set_multiplayer_authority(str(name).to_int())
 
 func _ready() -> void:
+	
+	direction_to_server_1.hide()
+	direction_to_server_2.hide()
+	direction_to_server_3.hide()
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
+	
+	direction_to_server_1.show()
+	direction_to_server_2.show()
+	direction_to_server_3.show()
 	
 	spawn()
 	
@@ -89,6 +106,20 @@ func _physics_process(delta: float) -> void:
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
+	
+	# TODO make this indicators bigger
+	# now they are not seen by another player
+	# TODO make them disappear if the servers affilation is players name
+	# TODO Implement new Health bombs, indicator of health,
+	# 	and also making an explosion when hit to destroy all bullets
+	# TODO Implement 3 patterns as they described i server.gd 
+	# TODO make score go bigger if you possess any server
+	# TODO enable damage from bullets
+	# TODO try to remake shield ui into 3d
+	# TODO make an end screen
+	direction_to_server_1.look_at(server_1.global_position)
+	direction_to_server_2.look_at(server_2.global_position)
+	direction_to_server_3.look_at(server_3.global_position)
 	
 	# Handle staying in Y = 0
 	if position.y != 0:

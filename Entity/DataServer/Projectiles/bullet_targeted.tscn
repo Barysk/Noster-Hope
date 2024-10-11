@@ -19,7 +19,7 @@ is_hemisphere = true
 [sub_resource type="SphereShape3D" id="SphereShape3D_m8fub"]
 radius = 0.182439
 
-[node name="BulletTargeted" type="Node3D"]
+[node name="BulletTargeted" type="Node3D" groups=["server_bullet"]]
 script = ExtResource("1_p0ofd")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -32,7 +32,7 @@ one_shot = true
 [node name="ChangeStateTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="Hitbox" parent="." instance=ExtResource("1_oklae")]
+[node name="Hitbox" parent="." groups=["server_bullet"] instance=ExtResource("1_oklae")]
 
 [node name="CollisionShape3D" parent="Hitbox" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.186194)

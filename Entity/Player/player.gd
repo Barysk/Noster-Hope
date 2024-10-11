@@ -23,9 +23,16 @@ const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
 @onready var server_2: StaticBody3D = $/root/Space/Server2
 @onready var server_3: StaticBody3D = $/root/Space/Server3
 
-@onready var direction_to_server_1: Node3D = $DirectionToServer1
-@onready var direction_to_server_2: Node3D = $DirectionToServer2
-@onready var direction_to_server_3: Node3D = $DirectionToServer3
+@onready var direction_to_server_1: Node3D = $PlayersUI3D/DirectionToServer1
+@onready var direction_to_server_2: Node3D = $PlayersUI3D/DirectionToServer2
+@onready var direction_to_server_3: Node3D = $PlayersUI3D/DirectionToServer3
+
+@onready var health_bomb_1: Node3D = $PlayersUI3D/HealthBomb1
+@onready var health_bomb_2: Node3D = $PlayersUI3D/HealthBomb2
+
+@onready var fire_range: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRange
+@onready var fire_range_close: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRangeClose
+
 
 
 
@@ -89,6 +96,10 @@ func _ready() -> void:
 	direction_to_server_1.hide()
 	direction_to_server_2.hide()
 	direction_to_server_3.hide()
+	
+	fire_range.hide()
+	fire_range_close.hide()
+	
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
@@ -96,6 +107,9 @@ func _ready() -> void:
 	direction_to_server_1.show()
 	direction_to_server_2.show()
 	direction_to_server_3.show()
+	
+	fire_range.show()
+	fire_range_close.show()
 	
 	spawn()
 	
@@ -107,9 +121,6 @@ func _physics_process(delta: float) -> void:
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
 	
-	# TODO make this indicators bigger
-	# now they are not seen by another player
-	# TODO make them disappear if the servers affilation is players name
 	# TODO Implement new Health bombs, indicator of health,
 	# 	and also making an explosion when hit to destroy all bullets
 	# TODO Implement 3 patterns as they described i server.gd 
@@ -117,14 +128,37 @@ func _physics_process(delta: float) -> void:
 	# TODO enable damage from bullets
 	# TODO try to remake shield ui into 3d
 	# TODO make an end screen
-	direction_to_server_1.look_at(server_1.global_position)
-	direction_to_server_2.look_at(server_2.global_position)
-	direction_to_server_3.look_at(server_3.global_position)
+	
+	health_bomb_1.rotate_y(deg_to_rad(360) * delta)
+	health_bomb_2.rotate_y(deg_to_rad(360) * delta)
+	
+	# Optimize with siganls if you'll have a spare time
+	#  make visible / invisble on affiliation change4
+	#  Optimization possible
+	if server_1.get_affiliation_id() != name:
+		direction_to_server_1.show()
+		direction_to_server_1.look_at(server_1.global_position)
+	else:
+		direction_to_server_1.hide()
+	
+	if server_2.get_affiliation_id() != name:
+		direction_to_server_2.show()
+		direction_to_server_2.look_at(server_2.global_position)
+	else:
+		direction_to_server_2.hide()
+	
+	if server_3.get_affiliation_id() != name:
+		direction_to_server_3.show()
+		direction_to_server_3.look_at(server_3.global_position)
+	else:
+		direction_to_server_3.hide()
+	
 	
 	# Handle staying in Y = 0
 	if position.y != 0:
 		position.y = 0
-
+	
+	
 	# Handle slow down
 	if Input.is_action_pressed("slow_down"):
 		speed = SPEED / 2
@@ -132,18 +166,18 @@ func _physics_process(delta: float) -> void:
 	else:
 		speed = SPEED
 		rotation_speed = ROTATION_SPEED
-
+	
 	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
 		attack_cool_down.start()
 		attack.rpc()
-
+	
 	# Handle player rotation
 	if Input.is_action_pressed("rotate_left"):
 		rotation.y += deg_to_rad(rotation_speed) *  delta
 	elif Input.is_action_pressed("rotate_right"):
 		rotation.y -= deg_to_rad(rotation_speed) *  delta
-
+	
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
@@ -153,7 +187,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
-
+	
 	move_and_slide()
 
 

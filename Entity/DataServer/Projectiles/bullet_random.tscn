@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="2_bsntl"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g4i6s"]
-albedo_color = Color(0.0823333, 0.38, 0, 1)
+albedo_color = Color(0.116667, 1, 0, 1)
 emission_enabled = true
-emission = Color(0, 0.36, 0.012, 1)
+emission = Color(0.57, 0.551, 0, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_ccrhl"]
 material = SubResource("StandardMaterial3D_g4i6s")

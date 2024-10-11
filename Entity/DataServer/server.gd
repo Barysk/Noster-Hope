@@ -53,11 +53,12 @@ var init_rotation : float = 0
 
 func affiliation_changed(new_affiliation):
 	if affiliation == null:
-		enemy_in_area.erase(new_affiliation)
-		if not enemy_in_area.is_empty():
-			enemy = enemy_in_area[0]
+		for i in enemy_in_area:
+			if i != new_affiliation:
+				enemy = i
+	
 	elif enemy != null and affiliation != new_affiliation:
-		enemy = affiliation
+		enemy = affiliation # May be optimized
 	
 	affiliation = new_affiliation
 	health = HEALTH
@@ -78,18 +79,12 @@ func health_changed(new_health):
 #	[ Node Functions ]
 
 func _process(_delta: float) -> void:
+	
 	if affiliation == null and not enemy_in_area.is_empty():
 		attack_with_pattern(health)
-
 	else:
-		if enemy != null and health != 0:
+		if enemy != null and health != 0 and enemy_in_area.has(enemy):
 			attack_with_pattern(health+3)
-			# 4 Hard ( Hard Random & Mid Targeted )
-			# 5 Mid ( Mid Random & Hard Targeted)
-			# 6 Mid ( Mid Targeted )
-
-
-
 
 
 #	[ My Functions ]
@@ -98,32 +93,37 @@ func change_affiliation(new_affiliation_node : CharacterBody3D, new_affiliation_
 	affiliation = new_affiliation_node
 	affiliation_id = new_affiliation_id
 
+func get_affiliation_id() -> String:
+	return affiliation_id
+
 func attack_with_pattern(pattern : int):
 	match pattern:
 		0:
 			pass
-		1: # Easy
+		1: # Random x2
 			bulletNStream(1, 1, 0.005, 60, 120, 1, 0, 12, 5, 3, 1)
 			bulletNStream(4, 2, get_rand_val_float(0.5, 1), 45, 45, 3, 0, 10, 12, 1, 0, null, 30, -0.1)
-		2: # Easy + Rand
+		2: # Flower 5 petels and rand
 			bulletNStream(5, 1, 0.3, 5, 6, 1, 0, 10, 6, 4, 1)
 			bulletNStream(5, 2, 0.3, -5, -6, 1, 0, 10, 6, 4, 2)
 			bulletNStream(50, 3, 5, 45, 45, 3, 0, 10, 12, 1, 3, null, 30, 2)
-		3: # Easy double
+		3: # Flower 8 petels
 			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
 			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
-
+	
 		4: # Hard ( Hard Random & Mid Targeted )
-			bulletNStream(1, 1, 1, 0, 0, 2, 0, 15, 10, 2, 0, enemy)
-			
+			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
+			bulletNStream(1, 2, 0.01, 0, 0, 3, 0, get_rand_val_float(10.0, 20.0), 12, 1, 0, null, 30, -0.1)
+			bulletNStream(1, 3, 0.3, 5, 6, 2, 0, 20, 11, 3, 3, enemy)
 		5: # Mid ( Mid Random & Hard Targeted)
-			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
-			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
-			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
-		
+			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
+			bulletNStream(8, 2, 1, 45, 45, 3, 0, 10, 12, get_rand_val_float(0.1 ,3), 2, null, 30, -0.1)
+			bulletNStream(25, 3, 5, 5, 6, 2, 0, get_rand_val_float(10,20), 11, 3, 3, enemy)
 		6: # Mid ( Mid Targeted )
-			pass
+			bulletNStream(8, 1, 0.2, 9, 10, 1, 0, 12, 5, 3, 1)
+			bulletNStream(8, 2, 0.2, -1, -2, 1, 0, 12, 5, 3, 2)
+			bulletNStream(25, 3, 8, 5, 6, 2, 0, 20, 11, 3, 3, enemy)
 
 # Need those for proper property synchronise
 func get_rand_val_int(from : int, to : int) -> int:
@@ -346,7 +346,7 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 	#print(area)
 	if area.is_in_group("player_bullet"):
 		health -= 1
-		if health == 0:
+		if health <= 0:
 			change_affiliation(area.get_parent().get_shooter(), area.get_parent().get_shooter_id())
 
 
@@ -358,11 +358,14 @@ func _on_detection_area_body_entered(body: Node3D) -> void:
 		enemy_in_area.append(body)
 	elif affiliation != null and body != affiliation:
 		enemy = body
+		enemy_in_area.append(body)
 
 func _on_detection_area_body_exited(body: Node3D) -> void:
 	#print("Body ", body, " is not now in detection area, and its position is ", body.global_position)
+	# May be optimized
 	
 	if affiliation == null:
 		enemy_in_area.erase(body)
 	elif affiliation != null and body != affiliation and enemy != null:
 		enemy = null
+		enemy_in_area.erase(body)

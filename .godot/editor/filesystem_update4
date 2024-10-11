@@ -6,3 +6,4 @@ res://Entity/DataServer/Projectiles/bullet_targeted.tscn
 res://Entity/DataServer/Projectiles/bullet_random.tscn
 res://Stages/Space/space.tscn
 res://Entity/Player/player.gd
+res://Entity/DataServer/server.gd

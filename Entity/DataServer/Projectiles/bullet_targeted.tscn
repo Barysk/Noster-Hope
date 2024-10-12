@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bg2sc10wnyumh"]
+[gd_scene load_steps=8 format=3 uid="uid://bg2sc10wnyumh"]
 
 [ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="1_oklae"]
 [ext_resource type="Script" path="res://Entity/DataServer/Projectiles/bullet_targeted.gd" id="1_p0ofd"]
+[ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="3_hqcly"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wgq8w"]
 albedo_color = Color(0.33, 0.732, 1, 1)
@@ -17,7 +18,10 @@ rings = 1
 is_hemisphere = true
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_m8fub"]
-radius = 0.182439
+radius = 0.12
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_li2xk"]
+radius = 0.3
 
 [node name="BulletTargeted" type="Node3D" groups=["server_bullet"]]
 script = ExtResource("1_p0ofd")
@@ -38,7 +42,15 @@ one_shot = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.186194)
 shape = SubResource("SphereShape3D_m8fub")
 
+[node name="Hurtbox" parent="." instance=ExtResource("3_hqcly")]
+
+[node name="CollisionShape3D" parent="Hurtbox" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.194338)
+shape = SubResource("SphereShape3D_li2xk")
+
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
 [connection signal="timeout" from="ChangeStateTimer" to="." method="_on_change_state_timer_timeout"]
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 
 [editable path="Hitbox"]
+[editable path="Hurtbox"]

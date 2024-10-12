@@ -8,6 +8,9 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 
 #	[ Attached Child Nodes ]
 
+# Space
+@onready var space: Node3D = $"."
+
 # Main Menu
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
 @onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
@@ -18,10 +21,37 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var health_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Health
 @onready var energy_bar: ProgressBar = $CanvasLayer/HUD/MarginContainer/VBoxContainer/EnergyBar
 @onready var score_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Score
+@onready var match_timer: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/MatchTimer
+
+# Servers
+@onready var server_1: StaticBody3D = $Server1
+@onready var server_2: StaticBody3D = $Server2
+@onready var server_3: StaticBody3D = $Server3
+
+# Timers
+@onready var second_timer: Timer = $SecondTimer
+
+# Players
+#@onready var players : Array
+
+
+#	[ State ]
+
+enum State{
+	State1_Waiting,
+	State2_Warmup,
+	State3_Fight,
+	State4_Endscreen
+}
+
 
 #	[ Variables ]
 
 @onready var index : int = 0
+@onready var time : int = 0
+@onready var player_nodes : Array
+@onready var player_names : Array
+@onready var state : State = State.State1_Waiting
 
 
 #	[ Network ]
@@ -34,7 +64,18 @@ var enet_peer = ENetMultiplayerPeer.new()
 # @rpc("authority", "call_remote", "unreliable", 0)
 
 
-#	[ My functions ]
+#	[ My Functions ]
+
+func reset_all() -> void:
+	server_1.reset_server()
+	server_2.reset_server()
+	server_3.reset_server()
+	
+	# resets players
+	# check the reliability of such solution
+	for i in player_names:
+		if get_node_or_null(NodePath(i)).has_method("reset_player"):
+			get_node_or_null(NodePath(i)).reset_player()
 
 func add_player(peer_id) -> void:
 	var player = PLAYER.instantiate()
@@ -42,12 +83,15 @@ func add_player(peer_id) -> void:
 	player.name = str(peer_id)
 	add_child(player)
 	
-	# Spawning at spawnpoints
-	#for spawn in get_tree().get_nodes_in_group("player_spawn_point"):
-		#if spawn.name == str(index):
-			#player.global_position = spawn.global_position
-			#player.rotation.y = spawn.rotation.y + deg_to_rad(randi_range(-30, 30))
-	#index += 1
+	# save player's name to array, to track the number of players
+	player_nodes = get_tree().get_nodes_in_group("player")
+	for i in player_nodes:
+		if not player_names.has(i.name):
+			player_names.append(i.name)
+	
+	# Start warm up if 2 players
+	if player_names.size() == 2:
+		state = State.State2_Warmup
 	
 	# connecting to corresponding player signal to update the HUD
 	if player.is_multiplayer_authority():
@@ -59,6 +103,11 @@ func remove_player(peer_id) -> void:
 	var player = get_node_or_null(str(peer_id))
 	if player:
 		player.queue_free()
+		
+		# I client disconnected change state to wait
+		state = State.State1_Waiting
+		player_nodes.clear()
+		player_names.clear()
 
 func update_health(health_value) -> void:
 	health_label.text = str(health_value)
@@ -107,6 +156,42 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 		node.health_changed.connect(update_health)
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
+
+
+#	[ Signals ]
+
+func _on_second_timer_timeout() -> void:
+	match state:
+		State.State1_Waiting:
+			if time != 30:
+				time = 30
+		State.State2_Warmup:
+			if time > 0:
+				time -= 1
+				match_timer.text = str(time)
+			elif time <= 0 and player_names.size() == 2:	#goto 3
+				time = 600
+				state = State.State3_Fight
+				reset_all()
+			elif time <= 0 and player_names.size() != 2:	#goto 1
+				state = State.State1_Waiting
+		State.State3_Fight:
+			if time > 0:
+				time -= 1
+			elif time <= 0:
+				state = State.State4_Endscreen
+				time = 60
+		State.State4_Endscreen:
+			if player_names.size() == 2:
+				state = State.State2_Warmup
+				time = 30
+			elif player_names.size() != 2:
+				state = State.State1_Waiting
+				time = 30
+	
+	match_timer.text = str(time)
+	second_timer.start()
+
 
 
 # [ UPNP ]

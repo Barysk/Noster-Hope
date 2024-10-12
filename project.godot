@@ -39,6 +39,8 @@ player_bullet="Bullet that was shot by a player"
 barrier=""
 server_bullet=""
 player_spawn_point=""
+player_explosion="appears when player losts  health"
+player_hurtbox=""
 
 [input]
 

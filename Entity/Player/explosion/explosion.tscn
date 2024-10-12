@@ -1,0 +1,181 @@
+[gd_scene load_steps=11 format=3 uid="uid://lhx0urc0phrj"]
+
+[ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="1_feian"]
+[ext_resource type="Script" path="res://Entity/Player/explosion/explosion.gd" id="1_hbvko"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2tnig"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.0627451)
+
+[sub_resource type="TorusMesh" id="TorusMesh_4744t"]
+material = SubResource("StandardMaterial3D_2tnig")
+inner_radius = 9.9
+outer_radius = 10.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pc5wb"]
+radius = 0.1
+
+[sub_resource type="Animation" id="Animation_kwgry"]
+resource_name = "Explosion"
+length = 0.15
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hitbox/CollisionShape3D:shape:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 0,
+"values": [0.1, 10.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CPUParticles3D:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.15),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeshInstance3D:mesh:inner_radius")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 0,
+"values": [0.001, 9.9]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("MeshInstance3D:mesh:outer_radius")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.15),
+"transitions": PackedFloat32Array(0.5, 0.5),
+"update": 0,
+"values": [0.002, 10.0]
+}
+
+[sub_resource type="Animation" id="Animation_xjekt"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Hitbox/CollisionShape3D:shape:radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CPUParticles3D:emitting")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeshInstance3D:mesh:inner_radius")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [9.9]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeshInstance3D:mesh:outer_radius")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [10.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ts3d3"]
+_data = {
+"Explosion": SubResource("Animation_kwgry"),
+"RESET": SubResource("Animation_xjekt")
+}
+
+[sub_resource type="BoxMesh" id="BoxMesh_4l5fa"]
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_eyvwl"]
+_data = [Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(0.89527, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[node name="Explosion" type="Node3D" groups=["player_explosion"]]
+script = ExtResource("1_hbvko")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_4744t")
+
+[node name="Hitbox" parent="." groups=["player_explosion"] instance=ExtResource("1_feian")]
+
+[node name="CollisionShape3D" parent="Hitbox" index="0"]
+shape = SubResource("SphereShape3D_pc5wb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ts3d3")
+}
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+amount = 256
+lifetime = 0.15
+one_shot = true
+explosiveness = 1.0
+lifetime_randomness = 1.0
+mesh = SubResource("BoxMesh_4l5fa")
+direction = Vector3(1, 1, 1)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 128.0
+initial_velocity_max = 196.0
+damping_max = 64.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_eyvwl")
+
+[editable path="Hitbox"]

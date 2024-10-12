@@ -60,7 +60,7 @@ func _on_hitbox_body_entered(body: Node3D) -> void:
 func _on_hitbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("static_object"):
 		bullet_destroy()
-	elif area.is_in_group("player"):
+	elif area.is_in_group("player_hurtbox"):
 		player_target = area.get_parent().name
 		if player_target != player_shooter_id:
 			bullet_destroy()

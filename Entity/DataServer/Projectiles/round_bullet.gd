@@ -60,3 +60,8 @@ func _on_time_to_live_timeout() -> void:
 
 func _on_change_state_timer_timeout() -> void:
 	state = State.SLOWING_DOWN
+
+func _on_hurtbox_area_entered(area: Area3D) -> void:
+	if area.is_in_group("player_explosion"):
+		if area.get_parent().get_explosion_owner() != name:
+			bullet_destroy()

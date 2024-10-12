@@ -7,7 +7,7 @@
 size = Vector3(0.1, 0.1, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_67n0d"]
-size = Vector3(0.09, 0.09, 0.9)
+size = Vector3(0.1, 0.1, 1)
 
 [node name="Bullet" type="Node3D" groups=["player_bullet"]]
 script = ExtResource("1_sd03x")

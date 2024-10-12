@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=11 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
 [ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
@@ -33,6 +33,17 @@ corner_detail = 1
 corner_radius_bottom_right = 7
 corner_radius_bottom_left = 7
 corner_detail = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hf5lh"]
+properties/0/path = NodePath(".:time")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:state")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:player_names")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Space" type="Node3D"]
 script = ExtResource("1_vwde2")
@@ -150,6 +161,14 @@ text = "|"
 layout_mode = 2
 text = "0"
 
+[node name="Separator2" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "|"
+
+[node name="MatchTimer" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "-//-"
+
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")
 spawn_path = NodePath("..")
@@ -171,6 +190,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 96, 0, -96)
 [node name="Server3" parent="." instance=ExtResource("3_ige54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96, 0, 96)
 
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_hf5lh")
+
+[node name="SecondTimer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+autostart = true
+
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
+[connection signal="timeout" from="SecondTimer" to="." method="_on_second_timer_timeout"]

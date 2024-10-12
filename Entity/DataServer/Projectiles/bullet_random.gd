@@ -86,3 +86,8 @@ func _on_change_state_timer_timeout() -> void:
 				pass
 		State.FLYING_RANDOM_TRAJECTORY_AND_CHANGES_SPEED:
 			pass
+
+func _on_hurtbox_area_entered(area: Area3D) -> void:
+	if area.is_in_group("player_explosion"):
+		if area.get_parent().get_explosion_owner() != name:
+			bullet_destroy()

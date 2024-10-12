@@ -78,3 +78,8 @@ func _on_change_state_timer_timeout() -> void:
 			state = State.FLYING_TO_GOT_POSITION
 		_:
 			pass
+
+func _on_hurtbox_area_entered(area: Area3D) -> void:
+	if area.is_in_group("player_explosion"):
+		if area.get_parent().get_explosion_owner() != name:
+			bullet_destroy()

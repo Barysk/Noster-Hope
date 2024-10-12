@@ -11,6 +11,17 @@ signal score_changed(score_value)
 #	[ Preloaded Scenes ]
 
 const BULLET = preload("res://Entity/Player/Bullet/bullet.tscn")
+const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
+
+
+#	[ Root Scene ]
+
+@onready var space: Node3D = $/root/Space
+
+
+#	[ Current player Scene ]
+
+@onready var current_player: CharacterBody3D = $"."
 
 
 #	[ Attached Child Nodes ]
@@ -62,13 +73,15 @@ func set_health(new_health : int) -> void:
 	if new_health < health:
 		health = clamp(new_health, -1, HEALTH)
 		energy = ENERGY
+		exlode()
 		if health <= -1:
-			shooter.add_score(100)
+			if shooter != null:
+				shooter.add_score(100)
 			health = HEALTH
 			spawn()
 	else:
 		health = clamp(new_health, 0, HEALTH)
-	
+	health_bombs_sync()
 	health_changed.emit(health)
 
 func set_energy(new_energy) -> void:
@@ -91,7 +104,10 @@ func _enter_tree() -> void:
 	# name already is uniq, this made in the space.gd when the player is instantiated
 	set_multiplayer_authority(str(name).to_int())
 
+
 func _ready() -> void:
+	
+	#space.append_player_to_array(current_player)
 	
 	direction_to_server_1.hide()
 	direction_to_server_2.hide()
@@ -117,20 +133,13 @@ func _ready() -> void:
 	camera_3d.current = true
 
 func _physics_process(delta: float) -> void:
-	# Check is this node has the authority to controll corresponding camera
-	# If not then do not run the rest of the function
-	if not is_multiplayer_authority(): return
-	
-	# TODO Implement new Health bombs, indicator of health,
-	# 	and also making an explosion when hit to destroy all bullets
-	# TODO Implement 3 patterns as they described i server.gd 
-	# TODO make score go bigger if you possess any server
-	# TODO enable damage from bullets
-	# TODO try to remake shield ui into 3d
-	# TODO make an end screen
 	
 	health_bomb_1.rotate_y(deg_to_rad(360) * delta)
 	health_bomb_2.rotate_y(deg_to_rad(360) * delta)
+	
+	# Check is this node has the authority to controll corresponding camera
+	# If not then do not run the rest of the function
+	if not is_multiplayer_authority(): return
 	
 	# Optimize with siganls if you'll have a spare time
 	#  make visible / invisble on affiliation change4
@@ -193,14 +202,22 @@ func _physics_process(delta: float) -> void:
 
 #	[ My functions ]
 
+func reset_player() -> void:
+	spawn()
+	health = HEALTH
+	energy = ENERGY
+	score = 0
+
 func spawn() -> void:
 	if name == str(1):
-		position = Vector3(-128,0,-128)
-		rotation = Vector3(0,deg_to_rad(-135),0)
+		# Normal position, uncomment later
+		#position = Vector3(-128 + randi_range(-10,10),0, -128 + randi_range(-10,10))
+		#rotation = Vector3(0,deg_to_rad(-135 + randi_range(-15,15)),0)
+		position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
+		rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
 	else:
-		position = Vector3(128,0,128)
-		rotation = Vector3(0,deg_to_rad(45),0)
-
+		position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
+		rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
 
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)
@@ -212,6 +229,23 @@ func attack() -> void:
 	bullet.bullet_initiate(name)
 	get_parent().add_child(bullet, true)
 
+func health_bombs_sync() -> void:
+	if health >= 2:
+		health_bomb_1.show()
+		health_bomb_2.show()
+	elif health == 1:
+		health_bomb_1.show()
+		health_bomb_2.hide()
+	elif health <= 0:
+		health_bomb_1.hide()
+		health_bomb_2.hide()
+
+func exlode() -> void:
+	var explosion = EXPLOSION.instantiate()
+	explosion.position = global_position
+	explosion.transform.basis = attack_source.global_transform.basis
+	explosion.set_explosion_owner(name)
+	get_parent().add_child(explosion, true)
 
 func add_score(value : int) -> void:
 	score += value
@@ -232,4 +266,9 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 		shooter_id = area.get_parent().get_shooter_id()
 		if shooter != null and shooter_id != name:
 			# print(shooter)	# DELETE in future
-			receive_damage(7)
+			receive_damage(3)
+	elif area.is_in_group("player_explosion"):
+		if area.get_parent().get_explosion_owner() != name:
+			receive_damage(33)
+	elif area.is_in_group("server_bullet"):
+		health -= 1

@@ -20,6 +20,8 @@ const BULLET_RANDOM = preload("res://Entity/DataServer/Projectiles/bullet_random
 @onready var attack_cool_down_timer_2: Timer = $AttackCoolDownTimer_2
 @onready var attack_cool_down_timer_3: Timer = $AttackCoolDownTimer_3
 
+@onready var add_score_timer: Timer = $AddScoreTimer
+
 @onready var affiliation_label: Label3D = $AffiliationLabel
 
 
@@ -44,7 +46,7 @@ var direction_changed_on_axis_3 : bool = false
 var last_rand_val_int : int = 0
 var last_rand_val_float : float = 0
 
-var enemy_in_area : Array
+var enemy_in_area : Array = []
 var enemy : CharacterBody3D
 var init_rotation : float = 0
 
@@ -60,6 +62,14 @@ func affiliation_changed(new_affiliation):
 	elif enemy != null and affiliation != new_affiliation:
 		enemy = affiliation # May be optimized
 	
+	if affiliation == null and new_affiliation != null:
+		new_affiliation.add_score(1500)
+		add_score_timer.start()
+	elif affiliation != null:
+		add_score_timer.stop()
+		add_score_timer.start()
+		new_affiliation.add_score(1250)
+	
 	affiliation = new_affiliation
 	health = HEALTH
 
@@ -70,8 +80,8 @@ func affiliation_id_changed(new_affiliation_id):
 func health_changed(new_health):
 	if new_health < health:
 		health = clamp(new_health, 0, HEALTH)
-		barrier.set_barrier_state(true)
 		barrier.set_barrier_health(100)
+		barrier.set_barrier_state(true)
 	else:
 		health = clamp(new_health, 0, HEALTH)
 
@@ -89,6 +99,34 @@ func _process(_delta: float) -> void:
 
 #	[ My Functions ]
 
+func reset_server() -> void:
+	affiliation = null
+	affiliation_id = ""
+	health = HEALTH
+	
+	bullet_rotation_axis_1 = 0
+	bullet_rotation_axis_2 = 0
+	bullet_rotation_axis_3 = 0
+	direction_changed_on_axis_1 = false
+	direction_changed_on_axis_2 = false
+	direction_changed_on_axis_3 = false
+	
+	last_rand_val_int = 0
+	last_rand_val_float = 0
+	
+	enemy_in_area = []
+	enemy = null
+	init_rotation = 0
+	
+	barrier.set_barrier_health(100)
+	barrier.set_barrier_state(true)
+	
+	attack_cool_down_timer_1.stop()
+	attack_cool_down_timer_2.stop()
+	attack_cool_down_timer_3.stop()
+	
+	add_score_timer.stop()
+
 func change_affiliation(new_affiliation_node : CharacterBody3D, new_affiliation_id : String):
 	affiliation = new_affiliation_node
 	affiliation_id = new_affiliation_id
@@ -102,7 +140,8 @@ func attack_with_pattern(pattern : int):
 			pass
 		1: # Random x2
 			bulletNStream(1, 1, 0.005, 60, 120, 1, 0, 12, 5, 3, 1)
-			bulletNStream(4, 2, get_rand_val_float(0.5, 1), 45, 45, 3, 0, 10, 12, 1, 0, null, 30, -0.1)
+			bulletNStream(4, 2, get_rand_val_float(0.5, 1), 45, 45, 3, 0, 10, 12, 1, 0, null, 30, \
+			-0.1)
 		2: # Flower 5 petels and rand
 			bulletNStream(5, 1, 0.3, 5, 6, 1, 0, 10, 6, 4, 1)
 			bulletNStream(5, 2, 0.3, -5, -6, 1, 0, 10, 6, 4, 2)
@@ -114,11 +153,13 @@ func attack_with_pattern(pattern : int):
 	
 		4: # Hard ( Hard Random & Mid Targeted )
 			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
-			bulletNStream(1, 2, 0.01, 0, 0, 3, 0, get_rand_val_float(10.0, 20.0), 12, 1, 0, null, 30, -0.1)
+			bulletNStream(1, 2, 0.01, 0, 0, 3, 0, get_rand_val_float(10.0, 20.0), 12, 1, 0, null, \
+			30, -0.1)
 			bulletNStream(1, 3, 0.3, 5, 6, 2, 0, 20, 11, 3, 3, enemy)
 		5: # Mid ( Mid Random & Hard Targeted)
 			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
-			bulletNStream(8, 2, 1, 45, 45, 3, 0, 10, 12, get_rand_val_float(0.1 ,3), 2, null, 30, -0.1)
+			bulletNStream(8, 2, 1, 45, 45, 3, 0, 10, 12, get_rand_val_float(0.1 ,3), 2, null, 30, \
+			-0.1)
 			bulletNStream(25, 3, 5, 5, 6, 2, 0, get_rand_val_float(10,20), 11, 3, 3, enemy)
 		6: # Mid ( Mid Targeted )
 			bulletNStream(8, 1, 0.2, 9, 10, 1, 0, 12, 5, 3, 1)
@@ -137,7 +178,8 @@ func get_rand_val_float(from : float, to : float) -> float:
 
 #	[ BulletHell Things ]
 
-func bulletStraightInit(speed : float, time_to_live_timer : float, change_state_timer : float, bullet_rotation_axis : int, additional_init_rotation : float):
+func bulletStraightInit(speed : float, time_to_live_timer : float, change_state_timer : float, \
+bullet_rotation_axis : int, additional_init_rotation : float):
 	var bullet = ROUND_BULLET.instantiate()
 	bullet.position = global_position
 	
@@ -157,7 +199,8 @@ func bulletStraightInit(speed : float, time_to_live_timer : float, change_state_
 	bullet.bullet_initiate(speed, time_to_live_timer, change_state_timer) # TODO add states directly to bullet
 	get_parent().add_child(bullet, true)
 
-func bulletTargetedInit(speed : float, time_to_live_timer : float, change_state_timer : float, bullet_rotation_axis : int, enemy_body : CharacterBody3D, additional_init_rotation : float):
+func bulletTargetedInit(speed : float, time_to_live_timer : float, change_state_timer : float, \
+bullet_rotation_axis : int, enemy_body : CharacterBody3D, additional_init_rotation : float):
 	var bullet = BULLET_TARGETED.instantiate()
 	bullet.position = global_position
 	
@@ -177,7 +220,9 @@ func bulletTargetedInit(speed : float, time_to_live_timer : float, change_state_
 	bullet.bullet_initiate(speed, time_to_live_timer, change_state_timer, enemy_body)
 	get_parent().add_child(bullet, true)
 
-func bulletRandomInit(speed : float, time_to_live_timer : float, change_state_timer : float, bullet_rotation_axis : int, random_rotation_angle : float, consistent_speed : float, additional_init_rotation : float):
+func bulletRandomInit(speed : float, time_to_live_timer : float, change_state_timer : float, \
+bullet_rotation_axis : int, random_rotation_angle : float, consistent_speed : float, \
+additional_init_rotation : float):
 	var bullet = BULLET_RANDOM.instantiate()
 	bullet.position = global_position
 	
@@ -198,7 +243,11 @@ func bulletRandomInit(speed : float, time_to_live_timer : float, change_state_ti
 	get_parent().add_child(bullet, true)
 
 # NStream Pattern
-func bulletNStream(number_of_streams : int, timer_num : int, wait_time : float, rand_angle_from : int, rand_angle_to : int, bullet_type : int, rand_change_direction : int, bullet_speed : float, bullet_live_time : float, change_bullet_state_timer : float, bullet_rotation_axis : int, enemy_body : CharacterBody3D = null, rotation_angle : float = 0, consistent_speed : float = 0):
+func bulletNStream(number_of_streams : int, timer_num : int, wait_time : float, \
+rand_angle_from : int, rand_angle_to : int, bullet_type : int, rand_change_direction : int, \
+bullet_speed : float, bullet_live_time : float, change_bullet_state_timer : float, \
+bullet_rotation_axis : int, enemy_body : CharacterBody3D = null, rotation_angle : float = 0, \
+consistent_speed : float = 0):
 # number_of_streams			- number of bullet streams
 # timer_num					- which timer to use
 # wait_time					- rate of fired bullets
@@ -245,8 +294,10 @@ func bulletNStream(number_of_streams : int, timer_num : int, wait_time : float, 
 			print("Wrong Timer")
 			return
 	
-	if (rand_angle_from != 0 or rand_angle_to != 0 or rand_change_direction != 0) and bullet_rotation_axis != 0:
-		rotate_bullet_source(bullet_rotation_axis, rand_angle_from, rand_angle_to, rand_change_direction)
+	if (rand_angle_from != 0 or rand_angle_to != 0 or rand_change_direction != 0) and \
+	bullet_rotation_axis != 0:
+		rotate_bullet_source(bullet_rotation_axis, rand_angle_from, rand_angle_to, \
+		rand_change_direction)
 	
 	var additional_init_rotation : float = 360.0 / number_of_streams
 
@@ -254,11 +305,14 @@ func bulletNStream(number_of_streams : int, timer_num : int, wait_time : float, 
 
 		match bullet_type:
 			1:
-				bulletStraightInit(bullet_speed, bullet_live_time, change_bullet_state_timer, bullet_rotation_axis, init_rotation)
+				bulletStraightInit(bullet_speed, bullet_live_time, change_bullet_state_timer, \
+				bullet_rotation_axis, init_rotation)
 			2:
-				bulletTargetedInit(bullet_speed, bullet_live_time, change_bullet_state_timer, bullet_rotation_axis, enemy_body, init_rotation)
+				bulletTargetedInit(bullet_speed, bullet_live_time, change_bullet_state_timer, \
+				bullet_rotation_axis, enemy_body, init_rotation)
 			3:
-				bulletRandomInit(bullet_speed, bullet_live_time, change_bullet_state_timer, bullet_rotation_axis, rotation_angle, consistent_speed, init_rotation)
+				bulletRandomInit(bullet_speed, bullet_live_time, change_bullet_state_timer, \
+				bullet_rotation_axis, rotation_angle, consistent_speed, init_rotation)
 		
 		init_rotation += additional_init_rotation
 		if init_rotation >= 360:
@@ -274,7 +328,8 @@ func bulletNStream(number_of_streams : int, timer_num : int, wait_time : float, 
 		3:
 			attack_cool_down_timer_3.start(wait_time)
 
-func rotate_bullet_source(axis_num : int, rand_angle_from : int, rand_angle_to : int, random_change_direction : int):
+func rotate_bullet_source(axis_num : int, rand_angle_from : int, rand_angle_to : int, \
+random_change_direction : int):
 	
 	# Direction changing
 	if random_change_direction == 0:
@@ -359,9 +414,12 @@ func _on_detection_area_body_entered(body: Node3D) -> void:
 	elif affiliation != null and body != affiliation:
 		enemy = body
 		enemy_in_area.append(body)
+	elif affiliation != null:
+		enemy_in_area.append(body)
 
 func _on_detection_area_body_exited(body: Node3D) -> void:
-	#print("Body ", body, " is not now in detection area, and its position is ", body.global_position)
+	#print("Body ", body, " is not now in detection area, and its position is ", 
+	#		body.global_position)
 	# May be optimized
 	
 	if affiliation == null:
@@ -369,3 +427,10 @@ func _on_detection_area_body_exited(body: Node3D) -> void:
 	elif affiliation != null and body != affiliation and enemy != null:
 		enemy = null
 		enemy_in_area.erase(body)
+	elif affiliation != null:
+		enemy_in_area.erase(body)
+
+
+func _on_add_score_timer_timeout() -> void:
+	if affiliation != null:
+		affiliation.add_score(1000)

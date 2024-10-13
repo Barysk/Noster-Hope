@@ -57,6 +57,8 @@ const ENERGY : int = 100	## Max energy
 
 #	[ Variables ]
 
+var username : String
+
 @onready var speed : float = SPEED						## actual speed
 @onready var rotation_speed : float = ROTATION_SPEED	## actual rotation speed
 @onready var health : int = HEALTH : set = set_health	## actual health
@@ -256,6 +258,18 @@ func receive_damage(energy_damage_value : int) -> void:
 		energy -= energy_damage_value
 	else:
 		health -= 1
+
+
+#	[ My Functions ]
+
+func get_score() -> int:
+	return score
+
+func set_username(player_username : String) -> void:
+	username = player_username
+
+func get_username() -> String:
+	return username
 
 
 #	[ Child Node's signals ]

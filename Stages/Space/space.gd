@@ -15,6 +15,7 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
 @onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
 @onready var address_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressLine
+@onready var nickname_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/NicknameLine
 
 # HUD
 @onready var hud: Control = $CanvasLayer/HUD
@@ -22,6 +23,14 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var energy_bar: ProgressBar = $CanvasLayer/HUD/MarginContainer/VBoxContainer/EnergyBar
 @onready var score_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Score
 @onready var match_timer: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/MatchTimer
+
+# EndScreen
+@onready var end_screen: PanelContainer = $CanvasLayer/EndScreen
+@onready var won_player: Label = $CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names/WonPlayer
+@onready var lost_player: Label = $CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names/LostPlayer
+@onready var won_player_score: Label = $CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores/WonPlayerScore
+@onready var lost_player_score: Label = $CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores/LostPlayerScore
+
 
 # Servers
 @onready var server_1: StaticBody3D = $Server1
@@ -47,12 +56,14 @@ enum State{
 
 #	[ Variables ]
 
-@onready var index : int = 0
-@onready var time : int = 0
-@onready var player_nodes : Array
-@onready var player_names : Array
-@onready var state : State = State.State1_Waiting
+#@onready var index : int = 0		##
+@onready var time : int = 0				## Time till state change
+@onready var player_nodes : Array		## Player node, temporar var for getting names
+@onready var player_names : Array		## Player node names, used for getting node from the tree
+@onready var players_endscreen : Array = [["Disconnected", 1], ["Disconnected", 0]] ## Array for printing score
+@onready var state : State = State.State1_Waiting	## Current state
 
+var nickname : String = "nickname"
 
 #	[ Network ]
 
@@ -62,6 +73,17 @@ var enet_peer = ENetMultiplayerPeer.new()
 
 # it is the default rpc values
 # @rpc("authority", "call_remote", "unreliable", 0)
+
+
+#	[ Nodes Functions ]
+
+func _ready() -> void:
+	#multiplayer.peer_connected.connect(_on_player_connected)
+	#multiplayer.peer_disconnected.connect(_on_player_disconnected)
+	#multiplayer.connected_to_server.connect(_on_connected_ok)
+	#multiplayer.connection_failed.connect(_on_connected_fail)
+	#multiplayer.server_disconnected.connect(_on_server_disconnected)
+	pass
 
 
 #	[ My Functions ]
@@ -103,12 +125,13 @@ func add_player(peer_id) -> void:
 func remove_player(peer_id) -> void:
 	var player = get_node_or_null(str(peer_id))
 	if player:
-		player.queue_free()
 		
-		# I client disconnected change state to wait
-		state = State.State1_Waiting
-		player_nodes.clear()
-		player_names.clear()
+		# If client disconnected change state to wait
+		# state = State.State1_Waiting
+		
+		player_nodes.erase(player)
+		player_names.erase(player.name)
+		player.queue_free()
 
 func update_health(health_value) -> void:
 	health_label.text = str(health_value)
@@ -124,6 +147,10 @@ func update_score(score_value) -> void:
 
 func _on_host_button_pressed() -> void:
 	
+	
+	#if nickname_line.text:
+	#	nickname = nickname_line.text
+	
 	main_menu.hide()
 	hud.show()
 	
@@ -138,10 +165,17 @@ func _on_host_button_pressed() -> void:
 	# Add host player, with unique id
 	add_player(multiplayer.get_unique_id())
 	
+	#for i in range(player_names.size()):
+		#if get_node_or_null(NodePath(player_names[i])).name == str(1):
+			#get_node_or_null(NodePath(player_names[i])).set_username(nickname)
+	
 	if is_online_check_box.button_pressed:
 		upnp_setup()
 
 func _on_join_button_pressed() -> void:
+	
+	#if nickname_line.text:
+	#	nickname = nickname_line.text
 	
 	if address_line.text:
 		ip_address = address_line.text
@@ -151,6 +185,20 @@ func _on_join_button_pressed() -> void:
 	
 	enet_peer.create_client(ip_address, PORT)
 	multiplayer.multiplayer_peer = enet_peer
+	
+#	for i in range(player_names.size()):
+#		if get_node_or_null(NodePath(player_names[i])).name != str(1):
+#			get_node_or_null(NodePath(player_names[i])).set_username(nickname)
+
+func _on_main_menu_pressed() -> void:
+	multiplayer.multiplayer_peer = null
+	get_tree().reload_current_scene()
+
+
+func _on_quit_game_pressed() -> void:
+	multiplayer.multiplayer_peer = null
+	get_tree().quit()
+
 
 func _on_multiplayer_spawner_spawned(node: Node) -> void:
 	if node.is_multiplayer_authority():
@@ -158,6 +206,11 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
 
+
+func sort_by_score(a, b) -> bool:
+	if a[1] > b[1]:
+		return true
+	return false
 
 #	[ Signals ]
 
@@ -172,7 +225,7 @@ func _on_second_timer_timeout() -> void:
 				time -= 1
 				match_timer.text = str(time)
 			elif time <= 0 and player_names.size() == 2:	#goto 3
-				time = 600
+				time = 10
 				state = State.State3_Fight
 				reset_all()
 			elif time <= 0 and player_names.size() != 2:	#goto 1
@@ -180,16 +233,40 @@ func _on_second_timer_timeout() -> void:
 		State.State3_Fight:
 			if time > 0:
 				time -= 1
+				if player_names.size() != 2:
+					time = 0
 			elif time <= 0:
+				for i in range(player_names.size()):
+					if get_node_or_null(NodePath(player_names[i])).has_method("get_score")\
+					and get_node_or_null(NodePath(player_names[i])).has_method("get_username"):
+						#players_endscreen[i][0] = get_node_or_null(NodePath(player_names[i])).name
+						players_endscreen[i][0] = get_node_or_null(NodePath(player_names[i])).get_username()
+						players_endscreen[i][1] = get_node_or_null(NodePath(player_names[i])).get_score()
+				
+				players_endscreen.sort_custom(sort_by_score)
+				
+				won_player.text = players_endscreen[0][0]
+				won_player_score.text = str(players_endscreen[0][1])
+				
+				lost_player.text = players_endscreen[1][0]
+				lost_player_score.text = str(players_endscreen[1][1])
+				
 				state = State.State4_Endscreen
-				time = 60
+				time = 15
+				
 		State.State4_Endscreen:
-			if player_names.size() == 2:
-				state = State.State2_Warmup
-				time = 30
-			elif player_names.size() != 2:
-				state = State.State1_Waiting
-				time = 30
+			end_screen.show()
+			if time > 0:
+				time -= 1
+			elif time <= 0:
+				if player_names.size() == 2:
+					end_screen.hide()
+					state = State.State2_Warmup
+					time = 30
+				elif player_names.size() != 2:
+					end_screen.hide()
+					state = State.State1_Waiting
+					time = 30
 	
 	match_timer.text = str(time)
 	second_timer.start()

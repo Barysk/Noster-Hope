@@ -107,6 +107,12 @@ placeholder_text = "Address"
 alignment = 1
 max_length = 16
 
+[node name="NicknameLine" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Nickname"
+alignment = 1
+max_length = 12
+
 [node name="HUD" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -174,9 +180,9 @@ visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 364.0
+offset_left = 377.0
 offset_top = 183.0
-offset_right = -363.0
+offset_right = -375.0
 offset_bottom = -182.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -191,49 +197,71 @@ theme_override_constants/margin_bottom = 15
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_constants/separation = 15
+alignment = 1
 
 [node name="MatchResults" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "MatchResults"
+text = "Data Collection Results"
 horizontal_alignment = 1
-
-[node name="VBoxContainer" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-alignment = 1
-
-[node name="WonPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "name"
-
-[node name="WonPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "000000"
-
-[node name="VBoxContainer2" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-alignment = 1
-
-[node name="LostPLayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer2"]
-layout_mode = 2
-text = "name"
-
-[node name="LostPLayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer2"]
-layout_mode = 2
-text = "000000"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 alignment = 1
 
-[node name="Button2" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Names" type="VBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
-text = "Main Menu"
 
-[node name="Button" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="WonPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "name"
+horizontal_alignment = 2
+
+[node name="LostPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
+layout_mode = 2
+text = "name"
+horizontal_alignment = 2
+
+[node name="Separators" type="VBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Separator" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = ":"
+
+[node name="Separator2" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
+layout_mode = 2
+text = ":"
+horizontal_alignment = 1
+
+[node name="Scores" type="VBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="WonPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
+layout_mode = 2
+text = "000000"
+horizontal_alignment = 2
+
+[node name="LostPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
+layout_mode = 2
+text = "000000"
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="MainMenu" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Main menu"
+
+[node name="QuitGame" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Quit Game"
 
@@ -268,5 +296,7 @@ autostart = true
 
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2/MainMenu" to="." method="_on_main_menu_pressed"]
+[connection signal="pressed" from="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2/QuitGame" to="." method="_on_quit_game_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]
 [connection signal="timeout" from="SecondTimer" to="." method="_on_second_timer_timeout"]

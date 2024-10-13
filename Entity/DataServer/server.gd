@@ -449,4 +449,5 @@ func _on_detection_area_body_exited(body: Node3D) -> void:
 
 func _on_add_score_timer_timeout() -> void:
 	if affiliation != null:
-		affiliation.add_score(1000)
+		affiliation.add_score(17)
+	add_score_timer.start()

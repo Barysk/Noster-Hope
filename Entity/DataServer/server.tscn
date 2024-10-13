@@ -129,7 +129,6 @@ one_shot = true
 one_shot = true
 
 [node name="AddScoreTimer" type="Timer" parent="."]
-wait_time = 10.0
 one_shot = true
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

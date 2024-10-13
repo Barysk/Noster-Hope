@@ -73,6 +73,7 @@ func reset_all() -> void:
 	
 	# resets players
 	# check the reliability of such solution
+	# now it seems like the only solution
 	for i in player_names:
 		if get_node_or_null(NodePath(i)).has_method("reset_player"):
 			get_node_or_null(NodePath(i)).reset_player()
@@ -161,6 +162,7 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 #	[ Signals ]
 
 func _on_second_timer_timeout() -> void:
+	#print(get_multiplayer_authority())
 	match state:
 		State.State1_Waiting:
 			if time != 30:

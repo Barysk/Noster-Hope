@@ -60,10 +60,10 @@ environment = SubResource("Environment_4xb7u")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 159.0
-offset_top = 70.0
-offset_right = -159.0
-offset_bottom = -69.0
+offset_left = 339.0
+offset_top = 160.0
+offset_right = -339.0
+offset_bottom = -159.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_2lvbu")
@@ -168,6 +168,74 @@ text = "|"
 [node name="MatchTimer" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "-//-"
+
+[node name="EndScreen" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 364.0
+offset_top = 183.0
+offset_right = -363.0
+offset_bottom = -182.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/EndScreen"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="MatchResults" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "MatchResults"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="WonPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "name"
+
+[node name="WonPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "000000"
+
+[node name="VBoxContainer2" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="LostPLayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "name"
+
+[node name="LostPLayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/VBoxContainer2"]
+layout_mode = 2
+text = "000000"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="Button2" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Main Menu"
+
+[node name="Button" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Quit Game"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")

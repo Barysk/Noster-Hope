@@ -71,10 +71,10 @@ properties/10/replication_mode = 2
 properties/11/path = NodePath(".:direction_changed_on_axis_3")
 properties/11/spawn = true
 properties/11/replication_mode = 2
-properties/12/path = NodePath(".:enemy_in_area")
+properties/12/path = NodePath(".:enemy_name")
 properties/12/spawn = true
 properties/12/replication_mode = 2
-properties/13/path = NodePath(".:enemy")
+properties/13/path = NodePath(".:player_names")
 properties/13/spawn = true
 properties/13/replication_mode = 2
 

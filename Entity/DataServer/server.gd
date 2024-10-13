@@ -46,36 +46,51 @@ var direction_changed_on_axis_3 : bool = false
 var last_rand_val_int : int = 0
 var last_rand_val_float : float = 0
 
-var enemy_in_area : Array = []
-var enemy : CharacterBody3D
+#var enemy_in_area : Array = []
+#var enemy : CharacterBody3D
 var init_rotation : float = 0
+
+var player_group : Array
+var player_names : Array
+var enemy_name : String
 
 
 #	[ Setters ]
 
 func affiliation_changed(new_affiliation):
-	if affiliation == null:
-		for i in enemy_in_area:
-			if i != new_affiliation:
-				enemy = i
-	
-	elif enemy != null and affiliation != new_affiliation:
-		enemy = affiliation # May be optimized
-	
-	if affiliation == null and new_affiliation != null:
+	if new_affiliation == null:
+		enemy_name = ""
+		
+	elif affiliation == null and new_affiliation != null:
 		new_affiliation.add_score(1500)
 		add_score_timer.start()
-	elif affiliation != null:
+		
+	elif affiliation != null and new_affiliation != null:
 		add_score_timer.stop()
 		add_score_timer.start()
-		new_affiliation.add_score(1250)
+		new_affiliation.add_score(1400)
+		
 	
 	affiliation = new_affiliation
 	health = HEALTH
+	
+
 
 func affiliation_id_changed(new_affiliation_id):
 	affiliation_id = new_affiliation_id
 	affiliation_label.text = affiliation_id
+	
+	player_group = get_tree().get_nodes_in_group("player")
+	for i in player_group:
+		if i.name != affiliation_id:
+			enemy_name = i.name
+	player_group.clear()
+	
+	if affiliation_id == "":
+		affiliation_label.text = "Neutrall"
+		enemy_name = ""
+	
+
 
 func health_changed(new_health):
 	if new_health < health:
@@ -90,11 +105,25 @@ func health_changed(new_health):
 
 func _process(_delta: float) -> void:
 	
-	if affiliation == null and not enemy_in_area.is_empty():
+	# new enemy code
+	#for i in enemy_in_area:
+		#if i != affiliation:
+			#enemy = i
+	
+	
+	## TODO REWRITE to use with player_names
+	#if affiliation == null and not enemy_in_area.is_empty():
+		#attack_with_pattern(health)
+	#else:
+		#if (health != 0 and enemy_in_area.has(affiliation) and enemy_in_area.size() == 2) \
+		#or (health != 0 and not enemy_in_area.has(affiliation) and enemy_in_area.size() == 1):
+			#attack_with_pattern(health+3)
+	
+	if affiliation == null and not player_names.is_empty():
 		attack_with_pattern(health)
 	else:
-		if enemy != null and health != 0 and enemy_in_area.has(enemy):
-			attack_with_pattern(health+3)
+		if health != 0 and player_names.has(enemy_name):
+			attack_with_pattern(health + 3)
 
 
 #	[ My Functions ]
@@ -114,8 +143,9 @@ func reset_server() -> void:
 	last_rand_val_int = 0
 	last_rand_val_float = 0
 	
-	enemy_in_area = []
-	enemy = null
+	## TODO REWRITE to use with player_names
+	#enemy_in_area = []
+	#enemy = null
 	init_rotation = 0
 	
 	barrier.set_barrier_health(100)
@@ -155,16 +185,16 @@ func attack_with_pattern(pattern : int):
 			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(1, 2, 0.01, 0, 0, 3, 0, get_rand_val_float(10.0, 20.0), 12, 1, 0, null, \
 			30, -0.1)
-			bulletNStream(1, 3, 0.3, 5, 6, 2, 0, 20, 11, 3, 3, enemy)
+			bulletNStream(1, 3, 0.3, 5, 6, 2, 0, 20, 11, 3, 3, get_node_or_null("../" + enemy_name))
 		5: # Mid ( Mid Random & Hard Targeted)
 			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 1, 45, 45, 3, 0, 10, 12, get_rand_val_float(0.1 ,3), 2, null, 30, \
 			-0.1)
-			bulletNStream(25, 3, 5, 5, 6, 2, 0, get_rand_val_float(10,20), 11, 3, 3, enemy)
+			bulletNStream(25, 3, 5, 5, 6, 2, 0, get_rand_val_float(10,20), 11, 3, 3, get_node_or_null("../" + enemy_name))
 		6: # Mid ( Mid Targeted )
 			bulletNStream(8, 1, 0.2, 9, 10, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 0.2, -1, -2, 1, 0, 12, 5, 3, 2)
-			bulletNStream(25, 3, 8, 5, 6, 2, 0, 20, 11, 3, 3, enemy)
+			bulletNStream(25, 3, 8, 5, 6, 2, 0, 20, 11, 3, 3, get_node_or_null("../" + enemy_name))
 
 # Need those for proper property synchronise
 func get_rand_val_int(from : int, to : int) -> int:
@@ -404,32 +434,18 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 		if health <= 0:
 			change_affiliation(area.get_parent().get_shooter(), area.get_parent().get_shooter_id())
 
-
 # Detection Area Signal
 func _on_detection_area_body_entered(body: Node3D) -> void:
-	#print("Body ", body, " is in detection area, and its position is ", body.global_position)
+	# save player's name to array, to track the number of players
+	player_group = get_tree().get_nodes_in_group("player")
+	for i in player_group:
+		if not player_names.has(i.name) and i == body:
+			player_names.append(i.name)
+	player_group.clear()
 	
-	if affiliation == null:
-		enemy_in_area.append(body)
-	elif affiliation != null and body != affiliation:
-		enemy = body
-		enemy_in_area.append(body)
-	elif affiliation != null:
-		enemy_in_area.append(body)
 
 func _on_detection_area_body_exited(body: Node3D) -> void:
-	#print("Body ", body, " is not now in detection area, and its position is ", 
-	#		body.global_position)
-	# May be optimized
-	
-	if affiliation == null:
-		enemy_in_area.erase(body)
-	elif affiliation != null and body != affiliation and enemy != null:
-		enemy = null
-		enemy_in_area.erase(body)
-	elif affiliation != null:
-		enemy_in_area.erase(body)
-
+	player_names.erase(body.name)
 
 func _on_add_score_timer_timeout() -> void:
 	if affiliation != null:

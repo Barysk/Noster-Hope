@@ -272,3 +272,4 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 			receive_damage(33)
 	elif area.is_in_group("server_bullet"):
 		health -= 1
+		health += 1

@@ -15,14 +15,14 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
 @onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
 @onready var address_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressLine
-@onready var nickname_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/NicknameLine
+
 
 # HUD
 @onready var hud: Control = $CanvasLayer/HUD
-@onready var health_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Health
 @onready var energy_bar: ProgressBar = $CanvasLayer/HUD/MarginContainer/VBoxContainer/EnergyBar
-@onready var score_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/Score
-@onready var match_timer: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/HBoxContainer/MatchTimer
+@onready var score_label: Label = $CanvasLayer/HUD/MarginContainer2/Score
+@onready var match_timer: Label = $CanvasLayer/HUD/MarginContainer3/Time
+@onready var drone_name_label: Label = $CanvasLayer/HUD/MarginContainer/VBoxContainer/DroneName
 
 # EndScreen
 @onready var end_screen: PanelContainer = $CanvasLayer/EndScreen
@@ -63,7 +63,6 @@ enum State{
 @onready var players_endscreen : Array = [["Disconnected", 1], ["Disconnected", 0]] ## Array for printing score
 @onready var state : State = State.State1_Waiting	## Current state
 
-var nickname : String = "nickname"
 
 #	[ Network ]
 
@@ -75,16 +74,9 @@ var enet_peer = ENetMultiplayerPeer.new()
 # @rpc("authority", "call_remote", "unreliable", 0)
 
 
-#	[ Nodes Functions ]
-
-func _ready() -> void:
-	#multiplayer.peer_connected.connect(_on_player_connected)
-	#multiplayer.peer_disconnected.connect(_on_player_disconnected)
-	#multiplayer.connected_to_server.connect(_on_connected_ok)
-	#multiplayer.connection_failed.connect(_on_connected_fail)
-	#multiplayer.server_disconnected.connect(_on_server_disconnected)
-	pass
-
+func _unhandled_key_input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("quit_game"):
+		get_tree().quit()
 
 #	[ My Functions ]
 
@@ -118,9 +110,9 @@ func add_player(peer_id) -> void:
 	
 	# connecting to corresponding player signal to update the HUD
 	if player.is_multiplayer_authority():
-		player.health_changed.connect(update_health)
 		player.energy_changed.connect(update_energy)
 		player.score_changed.connect(update_score)
+		player.drone_name_changed.connect(update_dronename)
 
 func remove_player(peer_id) -> void:
 	var player = get_node_or_null(str(peer_id))
@@ -133,23 +125,18 @@ func remove_player(peer_id) -> void:
 		player_names.erase(player.name)
 		player.queue_free()
 
-func update_health(health_value) -> void:
-	health_label.text = str(health_value)
-
 func update_energy(energy_value) -> void:
 	energy_bar.value = energy_value
 
 func update_score(score_value) -> void:
 	score_label.text = str(score_value)
 
+func update_dronename(drone_name) -> void:
+	drone_name_label.text = str(drone_name)
 
 #	[ Child Node's signals ]
 
 func _on_host_button_pressed() -> void:
-	
-	
-	#if nickname_line.text:
-	#	nickname = nickname_line.text
 	
 	main_menu.hide()
 	hud.show()
@@ -165,17 +152,10 @@ func _on_host_button_pressed() -> void:
 	# Add host player, with unique id
 	add_player(multiplayer.get_unique_id())
 	
-	#for i in range(player_names.size()):
-		#if get_node_or_null(NodePath(player_names[i])).name == str(1):
-			#get_node_or_null(NodePath(player_names[i])).set_username(nickname)
-	
 	if is_online_check_box.button_pressed:
 		upnp_setup()
 
 func _on_join_button_pressed() -> void:
-	
-	#if nickname_line.text:
-	#	nickname = nickname_line.text
 	
 	if address_line.text:
 		ip_address = address_line.text
@@ -186,9 +166,6 @@ func _on_join_button_pressed() -> void:
 	enet_peer.create_client(ip_address, PORT)
 	multiplayer.multiplayer_peer = enet_peer
 	
-#	for i in range(player_names.size()):
-#		if get_node_or_null(NodePath(player_names[i])).name != str(1):
-#			get_node_or_null(NodePath(player_names[i])).set_username(nickname)
 
 func _on_main_menu_pressed() -> void:
 	multiplayer.multiplayer_peer = null
@@ -202,9 +179,10 @@ func _on_quit_game_pressed() -> void:
 
 func _on_multiplayer_spawner_spawned(node: Node) -> void:
 	if node.is_multiplayer_authority():
-		node.health_changed.connect(update_health)
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
+		node.drone_name_changed.connect(update_dronename)
+
 
 
 func sort_by_score(a, b) -> bool:
@@ -270,7 +248,6 @@ func _on_second_timer_timeout() -> void:
 	
 	match_timer.text = str(time)
 	second_timer.start()
-
 
 
 # [ UPNP ]

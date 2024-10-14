@@ -1,11 +1,8 @@
 ## TODO
 
-* make an end screen with a score and buttons
-	[resume playing] default
-	[close game]
-* make for players a separate hurtbox to battle each other and reverse changes on PBullet
-* make an explosion slower
-* try to remake shield ui into 3d
+Parralax map
+Camera
+3D models
 
 ## IDEAS
 * Make score a particle that being send every 30sec? and the player must catch it
@@ -13,7 +10,6 @@
 	GOOD THING: adds additional activity
 	Problem: breaks core game loop
 	Possible solution: Player that catches not his data gets a half
-* add one more 
 
 ## DONE
 enable damage from bullets

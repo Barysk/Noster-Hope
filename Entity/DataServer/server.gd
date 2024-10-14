@@ -78,16 +78,17 @@ func affiliation_changed(new_affiliation):
 
 func affiliation_id_changed(new_affiliation_id):
 	affiliation_id = new_affiliation_id
-	affiliation_label.text = affiliation_id
 	
 	player_group = get_tree().get_nodes_in_group("player")
 	for i in player_group:
+		if i.name == affiliation_id:
+			affiliation_label.text = i.get_username()
 		if i.name != affiliation_id:
 			enemy_name = i.name
 	player_group.clear()
 	
 	if affiliation_id == "":
-		affiliation_label.text = "Neutrall"
+		affiliation_label.text = ""
 		enemy_name = ""
 	
 
@@ -105,25 +106,12 @@ func health_changed(new_health):
 
 func _process(_delta: float) -> void:
 	
-	# new enemy code
-	#for i in enemy_in_area:
-		#if i != affiliation:
-			#enemy = i
-	
-	
-	## TODO REWRITE to use with player_names
-	#if affiliation == null and not enemy_in_area.is_empty():
-		#attack_with_pattern(health)
-	#else:
-		#if (health != 0 and enemy_in_area.has(affiliation) and enemy_in_area.size() == 2) \
-		#or (health != 0 and not enemy_in_area.has(affiliation) and enemy_in_area.size() == 1):
-			#attack_with_pattern(health+3)
-	
 	if affiliation == null and not player_names.is_empty():
 		attack_with_pattern(health)
 	else:
 		if health != 0 and player_names.has(enemy_name):
 			attack_with_pattern(health + 3)
+	
 
 
 #	[ My Functions ]

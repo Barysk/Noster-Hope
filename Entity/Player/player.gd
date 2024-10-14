@@ -3,7 +3,7 @@ extends CharacterBody3D
 
 #	[ Custom Signals ]
 
-signal health_changed(health_value)
+signal drone_name_changed(drone_name)
 signal energy_changed(energy_value)
 signal score_changed(score_value)
 
@@ -44,6 +44,7 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 @onready var fire_range: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRange
 @onready var fire_range_close: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRangeClose
 
+@onready var init_timer: Timer = $InitTimer
 
 
 
@@ -57,13 +58,12 @@ const ENERGY : int = 100	## Max energy
 
 #	[ Variables ]
 
-var username : String
-
 @onready var speed : float = SPEED						## actual speed
 @onready var rotation_speed : float = ROTATION_SPEED	## actual rotation speed
 @onready var health : int = HEALTH : set = set_health	## actual health
 @onready var energy : int = ENERGY : set = set_energy	## actual energy
 @onready var score : int = 0 : set = set_score			## actual score
+@onready var username : String = "" : set = set_username_onchange
 
 @onready var shooter : Node = null 		## Shot last by a Node. Other Player or some other enemy
 @onready var shooter_id : String = ""
@@ -84,7 +84,6 @@ func set_health(new_health : int) -> void:
 	else:
 		health = clamp(new_health, 0, HEALTH)
 	health_bombs_sync()
-	health_changed.emit(health)
 
 func set_energy(new_energy) -> void:
 	if new_energy < energy:
@@ -98,6 +97,11 @@ func set_score(new_score) -> void:
 	score = new_score
 	# print("Player ", name, " score is ", score)	# DELETE in future
 	score_changed.emit(score)
+
+func set_username_onchange(new_username):
+	username = new_username
+	drone_name_changed.emit(username)
+
 
 
 #	[ Node functions ]
@@ -122,6 +126,11 @@ func _ready() -> void:
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
 	
+	if name == str(1):
+		set_username(str("Drone 1", randi_range(0,9), randi_range(0,9)))
+	else:
+		set_username(str("Drone 2", randi_range(0,9), randi_range(0,9)))
+	
 	direction_to_server_1.show()
 	direction_to_server_2.show()
 	direction_to_server_3.show()
@@ -130,7 +139,6 @@ func _ready() -> void:
 	fire_range_close.show()
 	
 	spawn()
-	
 	# Set the corresponding camera to a player
 	camera_3d.current = true
 
@@ -210,6 +218,7 @@ func reset_player() -> void:
 	energy = ENERGY
 	score = 0
 
+
 func spawn() -> void:
 	if name == str(1):
 		# Normal position, uncomment later
@@ -284,6 +293,14 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 	elif area.is_in_group("player_explosion"):
 		if area.get_parent().get_explosion_owner() != name:
 			receive_damage(33)
-	elif area.is_in_group("server_bullet"):
+
+
+func _on_bullet_hell_hurtbox_area_entered(area: Area3D) -> void:
+	if area.is_in_group("server_bullet"):
 		health -= 1
 		health += 1
+
+func _on_init_timer_timeout() -> void:
+	score_changed.emit(score)
+	energy_changed.emit(energy)
+	drone_name_changed.emit(username)

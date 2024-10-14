@@ -111,8 +111,8 @@ shape = SubResource("SphereShape3D_6e521")
 
 [node name="AffiliationLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74749, 0)
+pixel_size = 0.01
 billboard = 1
-text = "Neutrall"
 font_size = 128
 uppercase = true
 

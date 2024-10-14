@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://dbif1sjlyi52h"]
+[gd_scene load_steps=16 format=3 uid="uid://dbif1sjlyi52h"]
 
 [ext_resource type="Script" path="res://Entity/Player/player.gd" id="1_k1fa2"]
 [ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_tgjul"]
@@ -56,7 +56,7 @@ radius = 0.3
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_wuof1"]
 height = 1.0
-radius = 0.15
+radius = 0.28
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ghcvq"]
 properties/0/path = NodePath(".:position")
@@ -65,6 +65,13 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+properties/2/path = NodePath(".:username")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bct2w"]
+height = 1.0
+radius = 0.05
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 2
@@ -152,6 +159,19 @@ shape = SubResource("CylinderShape3D_wuof1")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_ghcvq")
 
+[node name="InitTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+autostart = true
+
+[node name="BulletHellHurtbox" parent="." instance=ExtResource("2_tgjul")]
+
+[node name="CollisionShape3D" parent="BulletHellHurtbox" index="0"]
+shape = SubResource("CylinderShape3D_bct2w")
+
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="timeout" from="InitTimer" to="." method="_on_init_timer_timeout"]
+[connection signal="area_entered" from="BulletHellHurtbox" to="." method="_on_bullet_hell_hurtbox_area_entered"]
 
 [editable path="Hurtbox"]
+[editable path="BulletHellHurtbox"]

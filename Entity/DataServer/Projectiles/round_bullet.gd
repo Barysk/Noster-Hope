@@ -1,6 +1,11 @@
 extends Node3D
 
 
+#	[ Preloaded Scenes ]
+
+const BULLET_DESTRUCTION_EFFECT = preload("res://Entity/DataServer/Projectiles/bullet_destruction_effect.tscn")
+
+
 #	[ Attached Child Nodes ]
 
 @onready var time_to_live: Timer = $TimeToLive
@@ -50,8 +55,15 @@ func bullet_initiate(bullet_speed : float, bullet_live_time : float, change_stat
 
 func bullet_destroy() -> void:
 	# Add some fancy effect later
+	destruction_effect()
 	queue_free()
 
+func destruction_effect() -> void:
+	var effect = BULLET_DESTRUCTION_EFFECT.instantiate()
+	effect.position = global_position
+	effect.transform.basis = global_transform.basis
+	effect.set_effect_colour(255, 153, 51)
+	get_parent().add_child(effect, true)
 
 #	[ Child node signals ]
 

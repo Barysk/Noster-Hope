@@ -1,6 +1,5 @@
 ## TODO
 
-Parralax map
 Camera
 3D models
 

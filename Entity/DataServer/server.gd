@@ -82,7 +82,9 @@ func affiliation_id_changed(new_affiliation_id):
 	player_group = get_tree().get_nodes_in_group("player")
 	for i in player_group:
 		if i.name == affiliation_id:
-			affiliation_label.text = i.get_username()
+			#affiliation_label.text = i.get_username()
+			var tween = get_tree().create_tween()
+			tween.tween_property(affiliation_label, "text", i.get_username(), 1).set_trans(Tween.TRANS_LINEAR)
 		if i.name != affiliation_id:
 			enemy_name = i.name
 	player_group.clear()

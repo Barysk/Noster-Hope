@@ -11,6 +11,9 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 # Space
 @onready var space: Node3D = $"."
 
+# Animation
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+
 # Main Menu
 @onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
 @onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
@@ -74,6 +77,9 @@ var enet_peer = ENetMultiplayerPeer.new()
 # @rpc("authority", "call_remote", "unreliable", 0)
 
 
+func _ready() -> void:
+	animation_player.play("Space_living")
+
 func _unhandled_key_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("quit_game"):
 		get_tree().quit()
@@ -117,22 +123,24 @@ func add_player(peer_id) -> void:
 func remove_player(peer_id) -> void:
 	var player = get_node_or_null(str(peer_id))
 	if player:
-		
-		# If client disconnected change state to wait
-		# state = State.State1_Waiting
-		
 		player_nodes.erase(player)
 		player_names.erase(player.name)
 		player.queue_free()
 
 func update_energy(energy_value) -> void:
-	energy_bar.value = energy_value
+	#energy_bar.value = energy_value
+	var tween = get_tree().create_tween()
+	tween.tween_property(energy_bar, "value", energy_value, 0.3).set_trans(Tween.TRANS_LINEAR)
 
 func update_score(score_value) -> void:
-	score_label.text = str(score_value)
+	#score_label.text = str(score_value)
+	var tween = get_tree().create_tween()
+	tween.tween_property(score_label, "text", str(score_value), 1).set_trans(Tween.TRANS_LINEAR)
 
 func update_dronename(drone_name) -> void:
-	drone_name_label.text = str(drone_name)
+	#drone_name_label.text = str(drone_name)
+	var tween = get_tree().create_tween()
+	tween.tween_property(drone_name_label, "text", str(drone_name), 1).set_trans(Tween.TRANS_LINEAR)
 
 #	[ Child Node's signals ]
 
@@ -203,7 +211,7 @@ func _on_second_timer_timeout() -> void:
 				time -= 1
 				match_timer.text = str(time)
 			elif time <= 0 and player_names.size() == 2:	#goto 3
-				time = 10
+				time = 600
 				state = State.State3_Fight
 				reset_all()
 			elif time <= 0 and player_names.size() != 2:	#goto 1
@@ -246,7 +254,9 @@ func _on_second_timer_timeout() -> void:
 					state = State.State1_Waiting
 					time = 30
 	
-	match_timer.text = str(time)
+	#match_timer.text = str(time)
+	var tween = get_tree().create_tween()
+	tween.tween_property(match_timer, "text", str(time), 1).set_trans(Tween.TRANS_LINEAR)
 	second_timer.start()
 
 

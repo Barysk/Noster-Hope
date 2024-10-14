@@ -1,0 +1,105 @@
+[gd_scene load_steps=8 format=3 uid="uid://dt4bh2ux2d8hl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ta5jh"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_2hkkn"]
+material = SubResource("StandardMaterial3D_ta5jh")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_bl4ak"]
+_data = [Vector2(0.012931, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="GDScript" id="GDScript_a5uh0"]
+script/source = "extends CPUParticles3D
+
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var bullet_destruction_effect: CPUParticles3D = $\".\"
+
+var colour : Color
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	var material = bullet_destruction_effect.mesh.surface_get_material(0)
+	material.albedo_color = colour
+	bullet_destruction_effect.mesh.surface_set_material(0, material)
+	
+	animation_player.play(\"destruction\")
+
+func set_effect_colour(R, G, B):
+	colour = Color(Color8(R, G, B))
+"
+
+[sub_resource type="Animation" id="Animation_dwtyj"]
+resource_name = "destruction"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"queue_free"
+}]
+}
+
+[sub_resource type="Animation" id="Animation_qkxlu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:emitting")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qmtf3"]
+_data = {
+"RESET": SubResource("Animation_qkxlu"),
+"destruction": SubResource("Animation_dwtyj")
+}
+
+[node name="BulletDestructionEffect" type="CPUParticles3D"]
+emitting = false
+amount = 16
+lifetime = 0.3
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("BoxMesh_2hkkn")
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 8.0
+initial_velocity_max = 16.0
+linear_accel_min = -60.0
+linear_accel_max = -60.0
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_bl4ak")
+script = SubResource("GDScript_a5uh0")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_qmtf3")
+}

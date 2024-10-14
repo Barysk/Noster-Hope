@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://lhx0urc0phrj"]
+[gd_scene load_steps=13 format=3 uid="uid://lhx0urc0phrj"]
 
 [ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="1_feian"]
 [ext_resource type="Script" path="res://Entity/Player/explosion/explosion.gd" id="1_hbvko"]
@@ -139,8 +139,18 @@ _data = {
 "RESET": SubResource("Animation_xjekt")
 }
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cjdnj"]
+shading_mode = 0
+
 [sub_resource type="BoxMesh" id="BoxMesh_4l5fa"]
+material = SubResource("StandardMaterial3D_cjdnj")
 size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_us6dm"]
+min_value = -200.0
+max_value = 200.0
+_data = [Vector2(0, 200), 0.0, 0.0, 0, 0, Vector2(1, -200), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [sub_resource type="Curve" id="Curve_eyvwl"]
 _data = [Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(0.89527, 0), 0.0, 0.0, 0, 0]
@@ -172,8 +182,11 @@ mesh = SubResource("BoxMesh_4l5fa")
 direction = Vector3(1, 1, 1)
 spread = 180.0
 gravity = Vector3(0, 0, 0)
-initial_velocity_min = 128.0
-initial_velocity_max = 196.0
+initial_velocity_min = 64.0
+initial_velocity_max = 64.0
+linear_accel_min = -1.0
+linear_accel_max = -1.0
+linear_accel_curve = SubResource("Curve_us6dm")
 damping_max = 64.0
 scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_eyvwl")

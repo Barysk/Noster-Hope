@@ -222,13 +222,13 @@ func reset_player() -> void:
 func spawn() -> void:
 	if name == str(1):
 		# Normal position, uncomment later
-		#position = Vector3(-128 + randi_range(-10,10),0, -128 + randi_range(-10,10))
-		#rotation = Vector3(0,deg_to_rad(-135 + randi_range(-15,15)),0)
-		position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
-		rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
+		position = Vector3(96 + randi_range(-10,10),0, -224 + randi_range(-10,10))
+		rotation = Vector3(0,deg_to_rad(150 + randi_range(-15,15)),0)
+		#position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
+		#rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
 	else:
-		position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
-		rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
+		position = Vector3(96 + randi_range(-10,10), 0, 224 + randi_range(-10,10))
+		rotation = Vector3(0,deg_to_rad(30 + randi_range(-15,15)),0)
 
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)
@@ -298,7 +298,7 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 func _on_bullet_hell_hurtbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("server_bullet"):
 		health -= 1
-		health += 1
+		#health += 1	## Uncomment for debug
 
 func _on_init_timer_timeout() -> void:
 	score_changed.emit(score)

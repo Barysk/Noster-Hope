@@ -1,6 +1,7 @@
+res://Entity/DataServer/Projectiles
+res://Stages/Space
 /home/bk/Documents/GameDev/Godot/Godot_Projects/tounproto4/
 res://Entity/Player/explosion
-res://Entity/DataServer/Projectiles
 /home/bk/.fonts
 res://Entity/Tools
 res://Entity/DataServer
@@ -8,4 +9,3 @@ res://Entity/DataServer
 res://addons/testing_object_bk
 res://Entity/Player/Bullet
 res://Entity/Player
-res://Stages/Space

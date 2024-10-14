@@ -17,9 +17,9 @@ radius = 48.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25u83"]
 transparency = 1
-shading_mode = 0
 albedo_color = Color(1, 1, 1, 0.25098)
-refraction_scale = 0.03
+emission_energy_multiplier = 8.19
+refraction_enabled = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_db8am"]
 material = SubResource("StandardMaterial3D_25u83")

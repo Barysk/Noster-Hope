@@ -1,9 +1,8 @@
-res://Entity/DataServer/server.tscn
-res://addons/testing_object_bk/mesh_library_one_cube.tres
 res://Entity/Player/player.tscn
+res://addons/testing_object_bk/mesh_library_one_cube.tres
 res://Entity/Player/Bullet/bullet.tscn
+res://Entity/DataServer/server.tscn
 res://Stages/Space/space.tscn
 res://Entity/Player/player.gd
 res://TODO.txt
-res://Stages/Space/space.gd
-res://Stages/Space/parallax_effect.tscn
+res://Entity/DataServer/Projectiles/round_bullet.tscn

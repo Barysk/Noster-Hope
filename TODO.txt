@@ -1,5 +1,5 @@
 ## TODO
-3D models
+3D models (server, border)
 
 ## IDEAS
 * Make score a particle that being send every 30sec? and the player must catch it
@@ -9,5 +9,3 @@
 	Possible solution: Player that catches not his data gets a half
 
 ## DONE
-I should make gracefull client exit on host disconnect
-Try switch nebulae and stars

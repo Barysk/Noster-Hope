@@ -26,6 +26,8 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 
 #	[ Attached Child Nodes ]
 
+@onready var animation_player: AnimationPlayer = $blockbench_export/AnimationPlayer
+
 @onready var attack_cool_down: Timer = $AttackCoolDown
 @onready var attack_source: Node3D = $Attack_Source
 
@@ -44,6 +46,7 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 @onready var health_bomb_1: Node3D = $PlayersUI3D/HealthBomb1
 @onready var health_bomb_2: Node3D = $PlayersUI3D/HealthBomb2
 
+@onready var player_indicator: MeshInstance3D = $PlayersUI3D/PlayerIndicator
 @onready var fire_range: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRange
 @onready var fire_range_close: MeshInstance3D = $PlayersUI3D/FireRangeIndicator/FireRangeClose
 
@@ -127,6 +130,8 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	
+	animation_player.play("idle")
+	
 	#space.append_player_to_array(current_player)
 	
 	direction_to_server_1.hide()
@@ -135,6 +140,7 @@ func _ready() -> void:
 	
 	fire_range.hide()
 	fire_range_close.hide()
+	player_indicator.hide()
 	
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
@@ -151,6 +157,7 @@ func _ready() -> void:
 	
 	fire_range.show()
 	fire_range_close.show()
+	player_indicator.show()
 	
 	spawn()
 	# Set the corresponding camera to a player
@@ -219,6 +226,13 @@ func _physics_process(delta: float) -> void:
 	#camera_3d.position.y = 30
 	smooth_transition(camera_target, "position", camera_height, slowdown_transition_duration)
 	
+	if Input.is_action_just_pressed("attack"):
+		if animation_player.current_animation != "fire":
+			animation_change.rpc("fire")
+	elif Input.is_action_just_released("attack"):
+		if animation_player.current_animation != "idle":
+			animation_change.rpc("idle")
+	
 	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
 		attack_cool_down.start()
@@ -266,12 +280,24 @@ func spawn() -> void:
 	if name == str(1):
 		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15)), 0.1)
 		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0), 0.1)
+#		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
+#		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
 	else:
 		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
 		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
 	current_player.show()
 	health = HEALTH
 	energy = ENERGY
+
+@rpc("authority", "call_local", "reliable", 0)
+func animation_change(animation : String) -> void:
+	if animation_player.current_animation != animation:
+		if animation == "fire":
+			animation_player.play("switch_to_fire")
+			animation_player.queue(animation)
+		if animation == "idle":
+			animation_player.play("switch_to_idle")
+			animation_player.queue(animation)
 
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)

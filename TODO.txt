@@ -1,7 +1,10 @@
 ## TODO
 
+Add changing camera fov and position on entering server detection area
+Add respawn effect (black camera or something like that, some glitches would be nice)
 Camera
 3D models
+I should make gracefull client exit on host disconnect
 
 ## IDEAS
 * Make score a particle that being send every 30sec? and the player must catch it

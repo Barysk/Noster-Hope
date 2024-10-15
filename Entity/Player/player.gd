@@ -28,7 +28,10 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 
 @onready var attack_cool_down: Timer = $AttackCoolDown
 @onready var attack_source: Node3D = $Attack_Source
-@onready var camera_3d: Camera3D = $Camera3D
+
+@onready var camera_controller: Node3D = $CameraController
+@onready var camera_target: Node3D = $CameraController/CameraTarget
+@onready var camera_3d: Camera3D = $CameraController/CameraTarget/Camera3D
 
 @onready var server_1: StaticBody3D = $/root/Space/Server1
 @onready var server_2: StaticBody3D = $/root/Space/Server2
@@ -54,6 +57,7 @@ const SPEED : float = 20.0			## Max speed
 const ROTATION_SPEED : float = 180	## Max rotation speed
 const HEALTH : int = 2		## Max health
 const ENERGY : int = 100	## Max energy
+const CAM_TILT : float = 15.0		## Max camera tilt
 
 
 #	[ Variables ]
@@ -65,6 +69,7 @@ const ENERGY : int = 100	## Max energy
 @onready var score : int = 0 : set = set_score			## actual score
 @onready var username : String = "" : set = set_username_onchange
 
+@onready var tilt_during_movement : float = CAM_TILT
 @onready var shooter : Node = null 		## Shot last by a Node. Other Player or some other enemy
 @onready var shooter_id : String = ""
 
@@ -176,15 +181,31 @@ func _physics_process(delta: float) -> void:
 	# Handle staying in Y = 0
 	if position.y != 0:
 		position.y = 0
-	
-	
+		
+		
 	# Handle slow down
 	if Input.is_action_pressed("slow_down"):
 		speed = SPEED / 2
 		rotation_speed = ROTATION_SPEED / 2
+		tilt_during_movement = 1.0
+		#camera_3d.fov = 70
+		var tween = get_tree().create_tween()
+		tween.tween_property(camera_3d, "fov", 70, 0.2).set_trans(Tween.TRANS_LINEAR)
+		#camera_3d.position.y = 40
+		var tween2 = get_tree().create_tween()
+		tween2.tween_property(camera_target, "position", Vector3(0, 50, 0), 0.2).set_trans(Tween.TRANS_LINEAR)
+		
 	else:
 		speed = SPEED
 		rotation_speed = ROTATION_SPEED
+		tilt_during_movement = CAM_TILT
+		#camera_3d.fov = 90
+		var tween = get_tree().create_tween()
+		tween.tween_property(camera_3d, "fov", 90, 0.6).set_trans(Tween.TRANS_LINEAR)
+		#camera_3d.position.y = 30
+		var tween2 = get_tree().create_tween()
+		tween2.tween_property(camera_target, "position", Vector3(0, 30, 0), 0.6).set_trans(Tween.TRANS_LINEAR)
+		
 	
 	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
@@ -203,9 +224,18 @@ func _physics_process(delta: float) -> void:
 	if direction:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
+		
+		var tween = get_tree().create_tween()
+		tween.tween_property(camera_controller, "rotation", \
+		Vector3(-input_dir.y * deg_to_rad(tilt_during_movement), \
+		0, input_dir.x * deg_to_rad(tilt_during_movement)), 1).set_trans(Tween.TRANS_LINEAR)
+		#camera_controller.rotation = Vector3(-input_dir.y * deg_to_rad(15), 0, input_dir.x * deg_to_rad(15))
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
+		#camera_controller.rotation = Vector3.ZERO
+		var tween = get_tree().create_tween()
+		tween.tween_property(camera_controller, "rotation", Vector3.ZERO, 0.3).set_trans(Tween.TRANS_LINEAR)
 	
 	move_and_slide()
 
@@ -222,13 +252,13 @@ func reset_player() -> void:
 func spawn() -> void:
 	if name == str(1):
 		# Normal position, uncomment later
-		position = Vector3(96 + randi_range(-10,10),0, -224 + randi_range(-10,10))
-		rotation = Vector3(0,deg_to_rad(150 + randi_range(-15,15)),0)
+		position = Vector3(96 + randi_range(-15, 15),0, -224 + randi_range(-15, 15))
+		rotation = Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0)
 		#position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
 		#rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
 	else:
-		position = Vector3(96 + randi_range(-10,10), 0, 224 + randi_range(-10,10))
-		rotation = Vector3(0,deg_to_rad(30 + randi_range(-15,15)),0)
+		position = Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15))
+		rotation = Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0)
 
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)

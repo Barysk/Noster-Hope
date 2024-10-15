@@ -1,3 +1,5 @@
+Node3D
+MeshInstance3D
 AnimationPlayer
 AnimationTree
 CPUParticles3D
@@ -7,8 +9,5 @@ MarginContainer
 PanelContainer
 Area3D
 StaticBody3D
-MeshInstance3D
-Node3D
 CollisionShape3D
 ParallaxBackground
-Parallax2D

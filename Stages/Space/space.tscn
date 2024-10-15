@@ -271,7 +271,6 @@ size_flags_vertical = 4
 theme_override_styles/background = SubResource("StyleBoxFlat_hu804")
 theme_override_styles/fill = SubResource("StyleBoxFlat_tv0d4")
 step = 1.0
-value = 100.0
 show_percentage = false
 
 [node name="Vignete" type="PanelContainer" parent="CanvasLayer/HUD"]

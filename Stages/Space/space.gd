@@ -129,18 +129,15 @@ func remove_player(peer_id) -> void:
 
 func update_energy(energy_value) -> void:
 	#energy_bar.value = energy_value
-	var tween = get_tree().create_tween()
-	tween.tween_property(energy_bar, "value", energy_value, 0.3).set_trans(Tween.TRANS_LINEAR)
+	smooth_transition(energy_bar, "value", energy_value, 0.3)
 
 func update_score(score_value) -> void:
 	#score_label.text = str(score_value)
-	var tween = get_tree().create_tween()
-	tween.tween_property(score_label, "text", str(score_value), 1).set_trans(Tween.TRANS_LINEAR)
+	smooth_transition(score_label, "text", str(score_value), 1)
 
 func update_dronename(drone_name) -> void:
 	#drone_name_label.text = str(drone_name)
-	var tween = get_tree().create_tween()
-	tween.tween_property(drone_name_label, "text", str(drone_name), 1).set_trans(Tween.TRANS_LINEAR)
+	smooth_transition(drone_name_label, "text", str(drone_name), 1)
 
 #	[ Child Node's signals ]
 
@@ -254,11 +251,12 @@ func _on_second_timer_timeout() -> void:
 					state = State.State1_Waiting
 					time = 30
 	
-	#match_timer.text = str(time)
-	var tween = get_tree().create_tween()
-	tween.tween_property(match_timer, "text", str(time), 1).set_trans(Tween.TRANS_LINEAR)
+	smooth_transition(match_timer, "text", str(time), 1)
 	second_timer.start()
 
+func smooth_transition(object : Object, property : NodePath, final_value : Variant, duration : float):
+	var tween = get_tree().create_tween()
+	tween.tween_property(object, property, final_value, duration).set_trans(Tween.TRANS_LINEAR)
 
 # [ UPNP ]
 

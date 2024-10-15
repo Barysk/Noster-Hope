@@ -1,5 +1,6 @@
 ## TODO
 
+Try switch nebulae and stars
 Add changing camera fov and position on entering server detection area
 Add respawn effect (black camera or something like that, some glitches would be nice)
 Camera
@@ -14,8 +15,4 @@ I should make gracefull client exit on host disconnect
 	Possible solution: Player that catches not his data gets a half
 
 ## DONE
-enable damage from bullets
-make score go bigger if you possess any server
-Implement new Health bombs, indicator of health,
-	and also making an explosion when hit to destroy all bullets
-Implement 3 patterns as they described i server.gd
+tween now used through the function smooth_transition

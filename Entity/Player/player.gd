@@ -57,7 +57,11 @@ const SPEED : float = 20.0			## Max speed
 const ROTATION_SPEED : float = 180	## Max rotation speed
 const HEALTH : int = 2		## Max health
 const ENERGY : int = 100	## Max energy
-const CAM_TILT : float = 15.0		## Max camera tilt
+
+const CAM_TILT : float = 15.0					## Default camera tilt
+const CAM_HEIGHT : Vector3 = Vector3(0, 30, 0)	## Default camera height
+const CAM_FOV : int = 90						## Default camera fov
+const CAM_ROTATION : Vector3 = Vector3.ZERO		## Default camera rotation
 
 
 #	[ Variables ]
@@ -69,10 +73,13 @@ const CAM_TILT : float = 15.0		## Max camera tilt
 @onready var score : int = 0 : set = set_score			## actual score
 @onready var username : String = "" : set = set_username_onchange
 
-@onready var tilt_during_movement : float = CAM_TILT
 @onready var shooter : Node = null 		## Shot last by a Node. Other Player or some other enemy
 @onready var shooter_id : String = ""
 
+@onready var tilt_during_movement : float = CAM_TILT
+@onready var camera_height : Vector3 = CAM_HEIGHT
+@onready var camera_fov : int = CAM_FOV
+@onready var camera_rotation : Vector3 = CAM_ROTATION
 
 #	[ Setters ]
 
@@ -182,30 +189,29 @@ func _physics_process(delta: float) -> void:
 	if position.y != 0:
 		position.y = 0
 		
-		
+	
+	var slowdown_transition_duration : float = 1
+	
 	# Handle slow down
 	if Input.is_action_pressed("slow_down"):
 		speed = SPEED / 2
 		rotation_speed = ROTATION_SPEED / 2
 		tilt_during_movement = 1.0
 		#camera_3d.fov = 70
-		var tween = get_tree().create_tween()
-		tween.tween_property(camera_3d, "fov", 70, 0.2).set_trans(Tween.TRANS_LINEAR)
-		#camera_3d.position.y = 40
-		var tween2 = get_tree().create_tween()
-		tween2.tween_property(camera_target, "position", Vector3(0, 50, 0), 0.2).set_trans(Tween.TRANS_LINEAR)
-		
+		camera_fov = 70
+		camera_height = Vector3(0, 50, 0)
+		slowdown_transition_duration = 0.2
 	else:
 		speed = SPEED
 		rotation_speed = ROTATION_SPEED
 		tilt_during_movement = CAM_TILT
-		#camera_3d.fov = 90
-		var tween = get_tree().create_tween()
-		tween.tween_property(camera_3d, "fov", 90, 0.6).set_trans(Tween.TRANS_LINEAR)
-		#camera_3d.position.y = 30
-		var tween2 = get_tree().create_tween()
-		tween2.tween_property(camera_target, "position", Vector3(0, 30, 0), 0.6).set_trans(Tween.TRANS_LINEAR)
-		
+		camera_fov = CAM_FOV
+		camera_height = CAM_HEIGHT
+		slowdown_transition_duration = 0.6
+	#camera_3d.fov = 90
+	smooth_transition(camera_3d, "fov", camera_fov, slowdown_transition_duration)
+	#camera_3d.position.y = 30
+	smooth_transition(camera_target, "position", camera_height, slowdown_transition_duration)
 	
 	# Handle Attack
 	if Input.is_action_pressed("attack") and attack_cool_down.is_stopped():
@@ -218,29 +224,30 @@ func _physics_process(delta: float) -> void:
 	elif Input.is_action_pressed("rotate_right"):
 		rotation.y -= deg_to_rad(rotation_speed) *  delta
 	
+	var tilt_transition_duration : float = 1
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir := Input.get_vector("left", "right", "up", "down")
 	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
-		
-		var tween = get_tree().create_tween()
-		tween.tween_property(camera_controller, "rotation", \
-		Vector3(-input_dir.y * deg_to_rad(tilt_during_movement), \
-		0, input_dir.x * deg_to_rad(tilt_during_movement)), 1).set_trans(Tween.TRANS_LINEAR)
-		#camera_controller.rotation = Vector3(-input_dir.y * deg_to_rad(15), 0, input_dir.x * deg_to_rad(15))
+		tilt_transition_duration = 1
+		camera_rotation = Vector3(-input_dir.y * deg_to_rad(tilt_during_movement), 0, input_dir.x * deg_to_rad(tilt_during_movement))
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
-		#camera_controller.rotation = Vector3.ZERO
-		var tween = get_tree().create_tween()
-		tween.tween_property(camera_controller, "rotation", Vector3.ZERO, 0.3).set_trans(Tween.TRANS_LINEAR)
+		tilt_transition_duration = 0.3
+		camera_rotation = CAM_ROTATION
 	
+	smooth_transition(camera_controller, "rotation", camera_rotation, tilt_transition_duration)
 	move_and_slide()
 
 
 #	[ My functions ]
+
+func smooth_transition(object : Object, property : NodePath, final_value : Variant, duration : float):
+	var tween = get_tree().create_tween()
+	tween.tween_property(object, property, final_value, duration).set_trans(Tween.TRANS_LINEAR)
 
 func reset_player() -> void:
 	spawn()
@@ -251,11 +258,8 @@ func reset_player() -> void:
 
 func spawn() -> void:
 	if name == str(1):
-		# Normal position, uncomment later
 		position = Vector3(96 + randi_range(-15, 15),0, -224 + randi_range(-15, 15))
 		rotation = Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0)
-		#position = Vector3(128 + randi_range(-10,10), 0, 128 + randi_range(-10,10))
-		#rotation = Vector3(0,deg_to_rad(45 + randi_range(-15,15)),0)
 	else:
 		position = Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15))
 		rotation = Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0)

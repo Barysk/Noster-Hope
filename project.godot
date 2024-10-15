@@ -43,6 +43,7 @@ player_spawn_point=""
 player_explosion="appears when player losts  health"
 player_hurtbox=""
 world_border="World border, leaving it means termination."
+server_detection_area=""
 
 [input]
 

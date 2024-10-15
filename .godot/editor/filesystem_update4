@@ -6,3 +6,4 @@ res://Stages/Space/space.tscn
 res://Entity/Player/player.gd
 res://TODO.txt
 res://Stages/Space/space.gd
+res://Stages/Space/parallax_effect.tscn

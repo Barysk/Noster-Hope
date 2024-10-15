@@ -15,9 +15,12 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 # Main Menu
-@onready var main_menu: PanelContainer = $CanvasLayer/MainMenu
-@onready var is_online_check_box: CheckBox = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
-@onready var address_line: LineEdit = $CanvasLayer/MainMenu/MarginContainer/VBoxContainer/AddressLine
+@onready var warning: PanelContainer = $CanvasLayer/VBoxContainer/Warning
+@onready var warning_text: Label = $CanvasLayer/VBoxContainer/Warning/MarginContainer/Label
+
+@onready var main_menu: PanelContainer = $CanvasLayer/VBoxContainer/MainMenu
+@onready var is_online_check_box: CheckBox = $CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
+@onready var address_line: LineEdit = $CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/AddressLine
 
 
 # HUD
@@ -82,6 +85,7 @@ func _ready() -> void:
 
 func _unhandled_key_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("quit_game"):
+		#close_connection()
 		get_tree().quit()
 
 #	[ My Functions ]
@@ -127,22 +131,35 @@ func remove_player(peer_id) -> void:
 		player_names.erase(player.name)
 		player.queue_free()
 
+func close_connection():
+	if multiplayer.is_server():
+		multiplayer.peer_connected.disconnect(add_player)
+		multiplayer.peer_disconnected.disconnect(remove_player)
+		multiplayer.server_disconnected.disconnect(return_to_main_menu)
+	
+	multiplayer.multiplayer_peer.close()
+	return_to_main_menu()
+
+func return_to_main_menu():
+	multiplayer.multiplayer_peer = null
+	warning_text.text = "Connection to host lost"
+	warning.show()
+	await get_tree().create_timer(3).timeout
+	get_tree().reload_current_scene()
+
 func update_energy(energy_value) -> void:
-	#energy_bar.value = energy_value
 	smooth_transition(energy_bar, "value", energy_value, 0.3)
 
 func update_score(score_value) -> void:
-	#score_label.text = str(score_value)
 	smooth_transition(score_label, "text", str(score_value), 1)
 
 func update_dronename(drone_name) -> void:
-	#drone_name_label.text = str(drone_name)
 	smooth_transition(drone_name_label, "text", str(drone_name), 1)
 
 #	[ Child Node's signals ]
 
 func _on_host_button_pressed() -> void:
-	
+	warning.hide()
 	main_menu.hide()
 	hud.show()
 	
@@ -153,6 +170,7 @@ func _on_host_button_pressed() -> void:
 	# signals
 	multiplayer.peer_connected.connect(add_player)			# player connected
 	multiplayer.peer_disconnected.connect(remove_player)	# player disconnected
+	multiplayer.server_disconnected.connect(return_to_main_menu)
 	
 	# Add host player, with unique id
 	add_player(multiplayer.get_unique_id())
@@ -165,30 +183,32 @@ func _on_join_button_pressed() -> void:
 	if address_line.text:
 		ip_address = address_line.text
 	
-	main_menu.hide()
-	hud.show()
+	## changes here
 	
-	enet_peer.create_client(ip_address, PORT)
-	multiplayer.multiplayer_peer = enet_peer
-	
+	var err = enet_peer.create_client(ip_address, PORT)
+	if err == 0:
+		warning.hide()
+		main_menu.hide()
+		hud.show()
+		multiplayer.multiplayer_peer = enet_peer
+		multiplayer.server_disconnected.connect(return_to_main_menu)
+	else:
+		warning_text.text = "Error on client creation"
+		warning.show()
 
 func _on_main_menu_pressed() -> void:
 	multiplayer.multiplayer_peer = null
 	get_tree().reload_current_scene()
 
-
 func _on_quit_game_pressed() -> void:
 	multiplayer.multiplayer_peer = null
 	get_tree().quit()
-
 
 func _on_multiplayer_spawner_spawned(node: Node) -> void:
 	if node.is_multiplayer_authority():
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
 		node.drone_name_changed.connect(update_dronename)
-
-
 
 func sort_by_score(a, b) -> bool:
 	if a[1] > b[1]:

@@ -89,8 +89,10 @@ func set_health(new_health : int) -> void:
 		energy = ENERGY
 		exlode()
 		if health <= -1:
-			if shooter != null:
+			if shooter != null and shooter_id != name:
 				shooter.add_score(100)
+			current_player.hide()
+			await get_tree().create_timer(3).timeout
 			health = HEALTH
 			spawn()
 	else:
@@ -162,7 +164,11 @@ func _physics_process(delta: float) -> void:
 	# Check is this node has the authority to controll corresponding camera
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
-	
+	if health < 0:
+		smooth_transition(camera_3d, "fov", 175, 1)
+		smooth_transition(camera_target, "position", Vector3.ZERO, 2)
+		smooth_transition(camera_controller, "rotation", Vector3.ZERO, 0.5)
+		return
 	# Optimize with siganls if you'll have a spare time
 	#  make visible / invisble on affiliation change4
 	#  Optimization possible
@@ -258,11 +264,14 @@ func reset_player() -> void:
 
 func spawn() -> void:
 	if name == str(1):
-		position = Vector3(96 + randi_range(-15, 15),0, -224 + randi_range(-15, 15))
-		rotation = Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0)
+		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15)), 0.1)
+		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0), 0.1)
 	else:
-		position = Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15))
-		rotation = Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0)
+		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
+		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
+	current_player.show()
+	health = HEALTH
+	energy = ENERGY
 
 # this rpc is made for another player was shooting in all game instances
 @rpc("authority", "call_local", "reliable", 0)

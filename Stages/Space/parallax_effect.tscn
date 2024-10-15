@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c38xf40j5npna" path="res://Stages/Space/Skymaps/Sun.png" id="1_ehxbo"]
 [ext_resource type="Texture2D" uid="uid://df3mpfn0n61qy" path="res://Stages/Space/Skymaps/BrightStars.png" id="2_k7w2w"]
-[ext_resource type="Texture2D" uid="uid://d18nx2ym63ivv" path="res://Stages/Space/Skymaps/Stars.png" id="3_2efa0"]
+[ext_resource type="Texture2D" uid="uid://5x3kvjgag6pl" path="res://Stages/Space/Skymaps/Nebulae.png" id="3_m8xdx"]
 [ext_resource type="Texture2D" uid="uid://dcrk02fthph53" path="res://Stages/Space/Skymaps/Nebulae_Green.png" id="4_htd1n"]
 
 [sub_resource type="GDScript" id="GDScript_jd3gs"]
@@ -10,15 +10,16 @@ script/source = "extends Node3D
 
 @onready var sun: MeshInstance3D = $Sun
 @onready var bright_stars: MeshInstance3D = $BrightStars
-@onready var dim_stars: MeshInstance3D = $DimStars
 @onready var nebulae: MeshInstance3D = $Nebulae
+@onready var nebulae_green: MeshInstance3D = $NebulaeGreen
+
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	bright_stars.rotate_y(deg_to_rad(0.03)*delta)
-	dim_stars.rotate_y(deg_to_rad(0.02)*delta)
-	nebulae.rotate_y(deg_to_rad(0.01)*delta)
+	nebulae.rotate_y(-deg_to_rad(0.5)*delta)
+	nebulae_green.rotate_y(deg_to_rad(0.5)*delta)
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sfx8x"]
@@ -49,7 +50,7 @@ height = 4.0
 transparency = 1
 blend_mode = 1
 shading_mode = 0
-albedo_texture = ExtResource("3_2efa0")
+albedo_texture = ExtResource("3_m8xdx")
 
 [sub_resource type="SphereMesh" id="SphereMesh_7026b"]
 material = SubResource("StandardMaterial3D_supm6")
@@ -78,8 +79,8 @@ mesh = SubResource("SphereMesh_h7uft")
 [node name="BrightStars" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_bnwgx")
 
-[node name="DimStars" type="MeshInstance3D" parent="."]
+[node name="Nebulae" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_7026b")
 
-[node name="Nebulae" type="MeshInstance3D" parent="."]
+[node name="NebulaeGreen" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_nucsd")

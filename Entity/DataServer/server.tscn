@@ -93,7 +93,7 @@ shape = SubResource("BoxShape3D_ioa4d")
 [node name="CollisionShape3D" parent="Hurtbox" index="0"]
 shape = SubResource("BoxShape3D_0vu87")
 
-[node name="DetectionArea" parent="." instance=ExtResource("2_1gav4")]
+[node name="DetectionArea" parent="." groups=["server_detection_area"] instance=ExtResource("2_1gav4")]
 
 [node name="CollisionShape3D" parent="DetectionArea" index="0"]
 shape = SubResource("SphereShape3D_kw8op")

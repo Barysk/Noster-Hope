@@ -1,13 +1,13 @@
-[gd_scene load_steps=20 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=19 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
 [ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
 [ext_resource type="PackedScene" uid="uid://cjn1o8ydxd63j" path="res://Stages/Space/parallax_effect.tscn" id="2_nqetn"]
-[ext_resource type="Texture2D" uid="uid://5x3kvjgag6pl" path="res://Stages/Space/Skymaps/Nebulae.png" id="2_nww61"]
+[ext_resource type="Texture2D" uid="uid://d18nx2ym63ivv" path="res://Stages/Space/Skymaps/Stars.png" id="3_b5q1y"]
 [ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_8sgsg"]
-panorama = ExtResource("2_nww61")
+panorama = ExtResource("3_b5q1y")
 
 [sub_resource type="Sky" id="Sky_mgfau"]
 sky_material = SubResource("PanoramaSkyMaterial_8sgsg")
@@ -52,15 +52,6 @@ border_width_top = 5
 border_width_right = 5
 border_width_bottom = 5
 border_color = Color(0.16, 0.16, 0.16, 0.501961)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jknu3"]
-bg_color = Color(0.32, 0, 0, 0.25098)
-border_width_left = 350
-border_width_top = 250
-border_width_right = 350
-border_width_bottom = 250
-border_color = Color(0, 0, 0, 0.12549)
-border_blend = true
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hu804"]
 bg_color = Color(0.26, 0.26, 0.26, 1)
@@ -119,61 +110,83 @@ libraries = {
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 777.0
-offset_top = 430.0
-offset_right = -777.0
-offset_bottom = -429.0
+offset_left = 786.0
+offset_top = 396.0
+offset_right = -784.0
+offset_bottom = -395.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_o1ugs")
 
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/MainMenu"]
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/VBoxContainer/MainMenu"]
 layout_mode = 2
 theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Main Menu"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="HostButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HostButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 32
 text = "Host"
 
-[node name="IsOnlineCheckBox" type="CheckBox" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="IsOnlineCheckBox" type="CheckBox" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_font_sizes/font_size = 32
 text = "Online Mode"
 
-[node name="JoinButton" type="Button" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="JoinButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Join"
 
-[node name="AddressLine" type="LineEdit" parent="CanvasLayer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="AddressLine" type="LineEdit" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 placeholder_text = "Address"
 alignment = 1
 max_length = 16
+
+[node name="Warning" type="PanelContainer" parent="CanvasLayer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o1ugs")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/VBoxContainer/Warning"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Warning/MarginContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
 visible = false
@@ -184,27 +197,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="WarningMessage" type="PanelContainer" parent="CanvasLayer/HUD"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_jknu3")
-
-[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/HUD/WarningMessage"]
-layout_mode = 2
-size_flags_horizontal = 4
-
-[node name="Label" type="Label" parent="CanvasLayer/HUD/WarningMessage/MarginContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "WANING: YOU ARE LEAVING MISSION AREA, IF YOU PROCEED YOU WILL BE TERMINATED"
-horizontal_alignment = 1
 
 [node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
@@ -218,7 +210,7 @@ theme_override_constants/margin_bottom = 5
 [node name="Score" type="Label" parent="CanvasLayer/HUD/MarginContainer2"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Data Var Init"
+text = "HostErr"
 
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/HUD"]
 layout_mode = 1
@@ -260,7 +252,7 @@ theme_override_constants/separation = 10
 [node name="DroneName" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Loading..."
+text = "EscToExit"
 horizontal_alignment = 2
 
 [node name="EnergyBar" type="ProgressBar" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer"]
@@ -420,8 +412,8 @@ shape = SubResource("SphereShape3D_deoej")
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.641371, -0.0654427, -0.764435, 0.0337799, 0.997798, -0.057079, 0.766487, 0.0107863, 0.642169, 193.906, 79.0389, -123.838)
 
-[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2/MainMenu" to="." method="_on_main_menu_pressed"]
 [connection signal="pressed" from="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2/QuitGame" to="." method="_on_quit_game_pressed"]
 [connection signal="spawned" from="MultiplayerSpawner" to="." method="_on_multiplayer_spawner_spawned"]

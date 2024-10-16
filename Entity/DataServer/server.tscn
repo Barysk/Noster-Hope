@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dslka5hon8bfc"]
+[gd_scene load_steps=18 format=3 uid="uid://dslka5hon8bfc"]
 
 [ext_resource type="Script" path="res://Entity/DataServer/server.gd" id="1_e1ja8"]
 [ext_resource type="PackedScene" uid="uid://cfsmx0wv5h6kj" path="res://Entity/Tools/detection_area.tscn" id="2_1gav4"]
@@ -33,6 +33,24 @@ radius = 2.5
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_6e521"]
 radius = 2.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_de4d4"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.25098)
+emission_energy_multiplier = 8.19
+refraction_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_2gkjt"]
+material = SubResource("StandardMaterial3D_de4d4")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_uun5j"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.99998, 1), 2.72779, 2.72779, 0, 0, Vector2(0.99999, 1), 0.0, 0.0, 0, 0, Vector2(1, 100), 267.692, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Curve" id="Curve_8ctgp"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.595238, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_p4a1y"]
 properties/0/path = NodePath(".:health")
@@ -108,6 +126,24 @@ shape = SubResource("SphereShape3D_171rs")
 
 [node name="CollisionShape3D" parent="Barrier/Hurtbox" index="0"]
 shape = SubResource("SphereShape3D_6e521")
+
+[node name="CPUParticles3D" parent="Barrier" index="5"]
+emitting = false
+amount = 64
+one_shot = true
+speed_scale = 2.0
+explosiveness = 1.0
+mesh = SubResource("BoxMesh_2gkjt")
+direction = Vector3(0, 0, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+damping_min = 15.0
+damping_max = 20.87
+damping_curve = SubResource("Curve_uun5j")
+scale_amount_max = 3.0
+scale_amount_curve = SubResource("Curve_8ctgp")
 
 [node name="AffiliationLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.74749, 0)

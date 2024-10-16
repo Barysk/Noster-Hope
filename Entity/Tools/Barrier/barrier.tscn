@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://dlpyagieaxtks"]
+[gd_scene load_steps=7 format=3 uid="uid://dlpyagieaxtks"]
 
 [ext_resource type="Script" path="res://Entity/Tools/Barrier/barrier.gd" id="1_f4jt1"]
 [ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_y7hml"]
@@ -10,6 +10,20 @@ properties/0/replication_mode = 1
 properties/1/path = NodePath(".:health")
 properties/1/spawn = true
 properties/1/replication_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25u83"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.25098)
+emission_energy_multiplier = 8.19
+refraction_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_qnvll"]
+material = SubResource("StandardMaterial3D_25u83")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="Curve" id="Curve_fktun"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.595238, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [node name="Barrier" type="StaticBody3D" groups=["barrier"]]
 collision_mask = 10
@@ -27,6 +41,22 @@ one_shot = true
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_6e1ul")
+
+[node name="CPUParticles3D" type="CPUParticles3D" parent="."]
+
+[node name="CPUParticles3D2" type="CPUParticles3D" parent="."]
+emitting = false
+amount = 64
+mesh = SubResource("BoxMesh_qnvll")
+direction = Vector3(0, 0, 0)
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+damping_min = 20.0
+damping_max = 20.0
+scale_amount_max = 7.0
+scale_amount_curve = SubResource("Curve_fktun")
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="RebootTimer" to="." method="_on_reboot_timer_timeout"]

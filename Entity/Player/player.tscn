@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dbif1sjlyi52h"]
+[gd_scene load_steps=20 format=3 uid="uid://dbif1sjlyi52h"]
 
 [ext_resource type="Script" path="res://Entity/Player/player.gd" id="1_k1fa2"]
 [ext_resource type="PackedScene" uid="uid://og7a242cf7hw" path="res://Entity/Player/Model/Drone.gltf" id="2_gkfu0"]
@@ -78,6 +78,17 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:username")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vt5a"]
+shading_mode = 0
+
+[sub_resource type="BoxMesh" id="BoxMesh_o86if"]
+material = SubResource("StandardMaterial3D_6vt5a")
+size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="Curve" id="Curve_yru4w"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.5, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -5.53847, 0.0, 0, 0]
+point_count = 3
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 2
@@ -179,6 +190,21 @@ shape = SubResource("CylinderShape3D_bct2w")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_ghcvq")
+
+[node name="ShootEffect" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, -0.941781)
+amount = 16
+lifetime = 0.1
+explosiveness = 1.0
+mesh = SubResource("BoxMesh_o86if")
+direction = Vector3(0, 0, 0)
+spread = 25.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 15.0
+scale_amount_min = 0.5
+scale_amount_max = 2.0
+scale_amount_curve = SubResource("Curve_yru4w")
 
 [connection signal="timeout" from="InitTimer" to="." method="_on_init_timer_timeout"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

@@ -27,6 +27,7 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 #	[ Attached Child Nodes ]
 
 @onready var animation_player: AnimationPlayer = $blockbench_export/AnimationPlayer
+@onready var shoot_effect: CPUParticles3D = $ShootEffect
 
 @onready var attack_cool_down: Timer = $AttackCoolDown
 @onready var attack_source: Node3D = $Attack_Source
@@ -226,10 +227,12 @@ func _physics_process(delta: float) -> void:
 	#camera_3d.position.y = 30
 	smooth_transition(camera_target, "position", camera_height, slowdown_transition_duration)
 	
-	if Input.is_action_just_pressed("attack"):
+	if Input.is_action_pressed("attack"):
+		play_shoot_effect.rpc(true)
 		if animation_player.current_animation != "fire":
 			animation_change.rpc("fire")
-	elif Input.is_action_just_released("attack"):
+	elif not Input.is_action_pressed("attack"):
+		play_shoot_effect.rpc(false)
 		if animation_player.current_animation != "idle":
 			animation_change.rpc("idle")
 	
@@ -278,16 +281,25 @@ func reset_player() -> void:
 
 func spawn() -> void:
 	if name == str(1):
-		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15)), 0.1)
-		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0), 0.1)
-#		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
-#		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
+#		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15)), 0.1)
+#		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0), 0.1)
+		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
+		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
 	else:
 		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
 		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
 	current_player.show()
 	health = HEALTH
 	energy = ENERGY
+
+@rpc("authority", "call_local", "reliable", 0)
+func play_shoot_effect(state : bool):
+	if state == true:
+		if animation_player.current_animation == "fire" and shoot_effect.emitting == false:
+			shoot_effect.emitting = true
+	else:
+		if shoot_effect.emitting == true:
+			shoot_effect.emitting = false
 
 @rpc("authority", "call_local", "reliable", 0)
 func animation_change(animation : String) -> void:

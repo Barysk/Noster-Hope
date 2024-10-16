@@ -7,6 +7,8 @@ extends StaticBody3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 @onready var reboot_timer: Timer = $RebootTimer
 @onready var hurtbox_collider: CollisionShape3D = $Hurtbox/CollisionShape3D
+@onready var cpu_particles_3d: CPUParticles3D = $CPUParticles3D
+@onready var cpu_particles_3d_2: CPUParticles3D = $CPUParticles3D2
 
 
 #	[ Constants ]
@@ -25,10 +27,13 @@ var health 	: int = HEALTH : set = health_changed
 func state_changed(new_state) -> void:
 	is_active = new_state
 	if new_state == false:
+		cpu_particles_3d.emitting = true
+		cpu_particles_3d_2.emitting = true
 		mesh_instance_3d.hide()
 		collision_shape_3d.set_deferred("disabled", true)
 		hurtbox_collider.set_deferred("disabled", true)
 	else:
+		cpu_particles_3d_2.emitting = false
 		mesh_instance_3d.show()
 		collision_shape_3d.set_deferred("disabled", false)
 		hurtbox_collider.set_deferred("disabled", false)
@@ -41,7 +46,6 @@ func health_changed(new_health) -> void:
 			reboot_timer.start()
 	else:
 		health = clamp(new_health, 0, HEALTH)
-
 
 
 #	[ My functions ]

@@ -8,9 +8,9 @@ const BULLET_DESTRUCTION_EFFECT = preload("res://Entity/DataServer/Projectiles/b
 
 #	[ Attached Child Nodes ]
 
+@onready var mesh_instance_3d: MeshInstance3D = $MeshInstance3D
 @onready var time_to_live: Timer = $TimeToLive
 @onready var change_state_timer: Timer = $ChangeStateTimer
-
 
 #	[ State ]
 
@@ -62,7 +62,9 @@ func destruction_effect() -> void:
 	var effect = BULLET_DESTRUCTION_EFFECT.instantiate()
 	effect.position = global_position
 	effect.transform.basis = global_transform.basis
-	effect.set_effect_colour(255, 153, 51)
+	
+	var material = mesh_instance_3d.mesh.surface_get_material(0)
+	effect.set_effect_colour(material.albedo_color)
 	get_parent().add_child(effect, true)
 
 #	[ Child node signals ]

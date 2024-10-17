@@ -78,6 +78,9 @@ properties/1/replication_mode = 1
 properties/2/path = NodePath(".:username")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath(".:health")
+properties/3/spawn = true
+properties/3/replication_mode = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6vt5a"]
 shading_mode = 0
@@ -175,7 +178,7 @@ one_shot = true
 autostart = true
 
 [node name="AttackCoolDown" type="Timer" parent="."]
-wait_time = 0.07
+wait_time = 0.1
 one_shot = true
 
 [node name="Hurtbox" parent="." groups=["player_hurtbox"] instance=ExtResource("2_tgjul")]
@@ -193,6 +196,7 @@ replication_config = SubResource("SceneReplicationConfig_ghcvq")
 
 [node name="ShootEffect" type="CPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 0, 0, -0.941781)
+emitting = false
 amount = 16
 lifetime = 0.1
 explosiveness = 1.0

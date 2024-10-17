@@ -18,6 +18,9 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 @onready var warning: PanelContainer = $CanvasLayer/VBoxContainer/Warning
 @onready var warning_text: Label = $CanvasLayer/VBoxContainer/Warning/MarginContainer/Label
 
+@onready var brief_text: PanelContainer = $CanvasLayer/BriefText
+@onready var brief_button: Button = $CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2/BriefButton
+
 @onready var main_menu: PanelContainer = $CanvasLayer/VBoxContainer/MainMenu
 @onready var is_online_check_box: CheckBox = $CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/IsOnlineCheckBox
 @onready var address_line: LineEdit = $CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/AddressLine
@@ -161,6 +164,7 @@ func update_dronename(drone_name) -> void:
 func _on_host_button_pressed() -> void:
 	warning.hide()
 	main_menu.hide()
+	brief_text.hide()
 	hud.show()
 	
 	# PORT initialisation
@@ -189,6 +193,7 @@ func _on_join_button_pressed() -> void:
 	if err == 0:
 		warning.hide()
 		main_menu.hide()
+		brief_text.hide()
 		hud.show()
 		multiplayer.multiplayer_peer = enet_peer
 		multiplayer.server_disconnected.connect(return_to_main_menu)
@@ -295,3 +300,8 @@ func upnp_setup() -> void:
 		"UPNP Port Mapping Failed! Error %s" % map_result)
 	
 	print("Success! Join Address: %s" % upnp.query_external_address())
+
+
+func _on_brief_button_pressed() -> void:
+	brief_button.hide()
+	brief_text.show()

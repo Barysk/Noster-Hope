@@ -1,10 +1,11 @@
-[gd_scene load_steps=21 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=23 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
 [ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
 [ext_resource type="PackedScene" uid="uid://cjn1o8ydxd63j" path="res://Stages/Space/parallax_effect.tscn" id="2_nqetn"]
 [ext_resource type="Texture2D" uid="uid://d18nx2ym63ivv" path="res://Stages/Space/Skymaps/Stars.png" id="3_b5q1y"]
 [ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
+[ext_resource type="FontFile" uid="uid://cjor0xw6k11hk" path="res://Font/3270-Regular.ttf" id="4_w04ry"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_8sgsg"]
 panorama = ExtResource("3_b5q1y")
@@ -44,6 +45,14 @@ _data = {
 "RESET": SubResource("Animation_vpptg"),
 "Space_living": SubResource("Animation_fqthd")
 }
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_l7d54"]
+bg_color = Color(0.16, 0.16, 0.16, 0.25098)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.16, 0.16, 0.16, 0.501961)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1ugs"]
 bg_color = Color(0.16, 0.16, 0.16, 0.25098)
@@ -119,14 +128,70 @@ libraries = {
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
+[node name="BriefText" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -302.0
+offset_top = 11.0
+offset_right = -11.0
+offset_bottom = -11.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_l7d54")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/BriefText"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/BriefText/MarginContainer"]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("4_w04ry")
+theme_override_fonts/mono_font = ExtResource("4_w04ry")
+theme_override_fonts/italics_font = ExtResource("4_w04ry")
+theme_override_fonts/bold_italics_font = ExtResource("4_w04ry")
+theme_override_fonts/bold_font = ExtResource("4_w04ry")
+theme_override_font_sizes/bold_italics_font_size = 16
+theme_override_font_sizes/italics_font_size = 16
+theme_override_font_sizes/mono_font_size = 16
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 16
+text = "[ CONTROLS ]
+Arrows to move the player
+Shift to slow down
+Z to attack
+X to turn left
+C to turn Right
+Esc to exit
+
+[ User Interface ]
+Left Top corner: Collected Data
+Right Top corner: Time till the end of the match
+Left Bottom corner: Your Index
+Bottom Bar: Shows state of your protective wall
+
+[ BACKSTORY ]
+You are a drone that only purpose is to collect every piece of data from the servers in space. However, you are not alone who hunting down the data. Destroy any enemy you'll oppose.
+
+[ Ojective ]
+Collect as much data as possible
+"
+autowrap_mode = 2
+
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 786.0
-offset_top = 396.0
-offset_right = -784.0
-offset_bottom = -395.0
+offset_left = 784.0
+offset_top = 412.0
+offset_right = -781.0
+offset_bottom = -411.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
@@ -147,11 +212,21 @@ theme_override_constants/margin_bottom = 15
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Main Menu"
-horizontal_alignment = 1
+
+[node name="BriefButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
+theme_override_font_sizes/font_size = 16
+text = "BRIEF"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -159,22 +234,26 @@ layout_mode = 2
 [node name="HostButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Host"
 
 [node name="IsOnlineCheckBox" type="CheckBox" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Online Mode"
 
 [node name="JoinButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Join"
 
 [node name="AddressLine" type="LineEdit" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 placeholder_text = "Address"
 alignment = 1
@@ -194,6 +273,7 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Warning/MarginContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 horizontal_alignment = 1
 
@@ -218,6 +298,7 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Score" type="Label" parent="CanvasLayer/HUD/MarginContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "HostErr"
 
@@ -236,6 +317,7 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Time" type="Label" parent="CanvasLayer/HUD/MarginContainer3"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Timezone Sync"
 horizontal_alignment = 2
@@ -260,6 +342,7 @@ theme_override_constants/separation = 10
 
 [node name="DroneName" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "EscToExit"
 horizontal_alignment = 2
@@ -289,10 +372,10 @@ visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 760.0
-offset_top = 415.0
-offset_right = -758.0
-offset_bottom = -413.0
+offset_left = 743.0
+offset_top = 434.0
+offset_right = -740.0
+offset_bottom = -432.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_ngfua")
@@ -313,6 +396,7 @@ alignment = 1
 
 [node name="MatchResults" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Data Collection Results"
 horizontal_alignment = 1
@@ -328,12 +412,14 @@ layout_mode = 2
 [node name="WonPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
 layout_mode = 2
 size_flags_horizontal = 0
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "name"
 horizontal_alignment = 2
 
 [node name="LostPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "name"
 horizontal_alignment = 2
@@ -345,11 +431,13 @@ alignment = 1
 [node name="Separator" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = ":"
 
 [node name="Separator2" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = ":"
 horizontal_alignment = 1
@@ -360,12 +448,14 @@ alignment = 2
 
 [node name="WonPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "000000"
 horizontal_alignment = 2
 
 [node name="LostPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "000000"
 horizontal_alignment = 2
@@ -376,11 +466,13 @@ theme_override_constants/separation = 15
 
 [node name="MainMenu" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Main menu"
 
 [node name="QuitGame" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Quit Game"
 
@@ -430,6 +522,7 @@ collision_mask = 2
 [node name="WorldBorderCollision" type="CollisionShape3D" parent="StaticBody3D/WorldBorder"]
 shape = SubResource("SphereShape3D_deoej")
 
+[connection signal="pressed" from="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2/BriefButton" to="." method="_on_brief_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2/MainMenu" to="." method="_on_main_menu_pressed"]

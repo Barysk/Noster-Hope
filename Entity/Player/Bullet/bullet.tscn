@@ -9,7 +9,7 @@ emission = Color(1, 1, 1, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_785ll"]
 material = SubResource("StandardMaterial3D_l75io")
-size = Vector3(0.1, 0.1, 1)
+size = Vector3(0.15, 0.15, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_67n0d"]
 size = Vector3(0.09, 0.09, 0.95)

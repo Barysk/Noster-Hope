@@ -1,11 +1,5 @@
 ## TODO
-3D models (server, border)
 
 ## IDEAS
-* Make score a particle that being send every 30sec? and the player must catch it
-	another player can catch it first
-	GOOD THING: adds additional activity
-	Problem: breaks core game loop
-	Possible solution: Player that catches not his data gets a half
 
 ## DONE

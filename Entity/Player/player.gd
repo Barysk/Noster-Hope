@@ -36,6 +36,9 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 @onready var camera_target: Node3D = $CameraController/CameraTarget
 @onready var camera_3d: Camera3D = $CameraController/CameraTarget/Camera3D
 
+@onready var hurtbox_collision: CollisionShape3D = $Hurtbox/CollisionShape3D
+@onready var hurtbox_bullethell_collision: CollisionShape3D = $BulletHellHurtbox/CollisionShape3D
+
 @onready var server_1: StaticBody3D = $/root/Space/Server1
 @onready var server_2: StaticBody3D = $/root/Space/Server2
 @onready var server_3: StaticBody3D = $/root/Space/Server3
@@ -62,8 +65,8 @@ const ROTATION_SPEED : float = 180	## Max rotation speed
 const HEALTH : int = 2		## Max health
 const ENERGY : int = 100	## Max energy
 
-const CAM_TILT : float = 15.0					## Default camera tilt
-const CAM_HEIGHT : Vector3 = Vector3(0, 30, 0)	## Default camera height
+const CAM_TILT : float = 30.0					## Default camera tilt
+const CAM_HEIGHT : Vector3 = Vector3(0, 20, 0)	## Default camera height
 const CAM_FOV : int = 90						## Default camera fov
 const CAM_ROTATION : Vector3 = Vector3.ZERO		## Default camera rotation
 
@@ -91,17 +94,8 @@ func set_health(new_health : int) -> void:
 	if new_health < health:
 		health = clamp(new_health, -1, HEALTH)
 		energy = ENERGY
-		exlode()
-		if health <= -1:
-			if shooter != null and shooter_id != name:
-				shooter.add_score(100)
-			current_player.hide()
-			await get_tree().create_timer(3).timeout
-			health = HEALTH
-			spawn()
 	else:
 		health = clamp(new_health, 0, HEALTH)
-	health_bombs_sync()
 
 func set_energy(new_energy) -> void:
 	if new_energy < energy:
@@ -160,12 +154,14 @@ func _ready() -> void:
 	fire_range_close.show()
 	player_indicator.show()
 	
+	#camera_target.position = CAM_HEIGHT
+	
 	spawn()
 	# Set the corresponding camera to a player
 	camera_3d.current = true
 
 func _physics_process(delta: float) -> void:
-	
+	health_bombs_sync()
 	health_bomb_1.rotate_y(deg_to_rad(360) * delta)
 	health_bomb_2.rotate_y(deg_to_rad(360) * delta)
 	
@@ -221,7 +217,7 @@ func _physics_process(delta: float) -> void:
 		tilt_during_movement = CAM_TILT
 		camera_fov = CAM_FOV
 		camera_height = CAM_HEIGHT
-		slowdown_transition_duration = 0.6
+		slowdown_transition_duration = 1
 	#camera_3d.fov = 90
 	smooth_transition(camera_3d, "fov", camera_fov, slowdown_transition_duration)
 	#camera_3d.position.y = 30
@@ -255,7 +251,8 @@ func _physics_process(delta: float) -> void:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 		tilt_transition_duration = 1
-		camera_rotation = Vector3(-input_dir.y * deg_to_rad(tilt_during_movement), 0, input_dir.x * deg_to_rad(tilt_during_movement))
+		camera_rotation = Vector3(-input_dir.y * deg_to_rad(tilt_during_movement), 0, \
+		input_dir.x * deg_to_rad(tilt_during_movement))
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
@@ -274,21 +271,30 @@ func smooth_transition(object : Object, property : NodePath, final_value : Varia
 
 func reset_player() -> void:
 	spawn()
-	health = HEALTH
-	energy = ENERGY
 	score = 0
 
+func player_destroyed() -> void:
+	current_player.hide()
+	hurtbox_collision.set_deferred("disabled", true)
+	hurtbox_bullethell_collision.set_deferred("disabled", true)
+	score -= 100
+	await get_tree().create_timer(3).timeout
+	spawn()
+	health = HEALTH
 
 func spawn() -> void:
 	if name == str(1):
-#		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15)), 0.1)
-#		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0), 0.1)
-		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
-		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
+		position = Vector3(96 + randi_range(-15, 15), 0, -224 + randi_range(-15, 15))
+		rotation = Vector3(0,deg_to_rad(150 + randi_range(-30, 30)),0)
+#		position = Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15))
+#		rotation = Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0)
 	else:
-		smooth_transition(current_player, "position", Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15)), 0.1)
-		smooth_transition(current_player, "rotation", Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0), 0.1)
+		position = Vector3(96 + randi_range(-15, 15), 0, 224 + randi_range(-15, 15))
+		rotation = Vector3(0,deg_to_rad(30 + randi_range(-30, 30)),0)
+	
 	current_player.show()
+	hurtbox_collision.set_deferred("disabled", false)
+	hurtbox_bullethell_collision.set_deferred("disabled", false)
 	health = HEALTH
 	energy = ENERGY
 
@@ -322,13 +328,13 @@ func attack() -> void:
 	get_parent().add_child(bullet, true)
 
 func health_bombs_sync() -> void:
-	if health >= 2:
+	if health >= 2 and health_bomb_1 != null:
 		health_bomb_1.show()
 		health_bomb_2.show()
-	elif health == 1:
+	elif health == 1 and health_bomb_1 != null:
 		health_bomb_1.show()
 		health_bomb_2.hide()
-	elif health <= 0:
+	elif health <= 0 and health_bomb_1 != null:
 		health_bomb_1.hide()
 		health_bomb_2.hide()
 
@@ -348,6 +354,10 @@ func receive_damage(energy_damage_value : int) -> void:
 		energy -= energy_damage_value
 	else:
 		health -= 1
+		if shooter != null and shooter_id != name and health == -1:
+			shooter.add_score(100)
+			player_destroyed()
+		exlode()
 
 
 #	[ My Functions ]
@@ -360,7 +370,6 @@ func set_username(player_username : String) -> void:
 
 func get_username() -> String:
 	return username
-
 
 #	[ Child Node's signals ]
 
@@ -379,6 +388,9 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 func _on_bullet_hell_hurtbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("server_bullet"):
 		health -= 1
+		exlode()
+		if health == -1:
+			player_destroyed()
 		#health += 1	## Uncomment for debug
 
 func _on_init_timer_timeout() -> void:

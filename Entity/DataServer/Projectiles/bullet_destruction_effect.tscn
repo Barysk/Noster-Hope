@@ -27,8 +27,9 @@ func _ready() -> void:
 	
 	animation_player.play(\"destruction\")
 
-func set_effect_colour(R, G, B):
-	colour = Color(Color8(R, G, B))
+func set_effect_colour(new_color : Color): #R, G, B):
+	colour = new_color
+	#colour = Color(Color8(R, G, B))
 "
 
 [sub_resource type="Animation" id="Animation_qkxlu"]

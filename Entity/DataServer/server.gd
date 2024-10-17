@@ -10,6 +10,7 @@ const BULLET_RANDOM = preload("res://Entity/DataServer/Projectiles/bullet_random
 
 #	[ Attached Child Nodes ]
 
+@onready var server_model_3d: Node3D = $ServerModel3D
 @onready var hurtbox: Area3D = $Hurtbox
 @onready var detection_area: Area3D = $DetectionArea
 @onready var barrier: StaticBody3D = $Barrier
@@ -62,13 +63,13 @@ func affiliation_changed(new_affiliation):
 		enemy_name = ""
 		
 	elif affiliation == null and new_affiliation != null:
-		new_affiliation.add_score(1500)
+		new_affiliation.add_score(1000)
 		add_score_timer.start()
 		
 	elif affiliation != null and new_affiliation != null:
 		add_score_timer.stop()
 		add_score_timer.start()
-		new_affiliation.add_score(1400)
+		new_affiliation.add_score(1250)
 		
 	
 	affiliation = new_affiliation
@@ -106,7 +107,9 @@ func health_changed(new_health):
 
 #	[ Node Functions ]
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	
+	server_model_3d.rotate_y(deg_to_rad(15) * delta)
 	
 	if affiliation == null and not player_names.is_empty():
 		attack_with_pattern(health)
@@ -170,12 +173,11 @@ func attack_with_pattern(pattern : int):
 			bulletNStream(8, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 0.2, -5, -6, 1, 0, 12, 5, 3, 2)
 			bulletNStream(50, 3, 3, 45, 45, 1, 0, 10, 10, 3, 3)
-	
 		4: # Hard ( Hard Random & Mid Targeted )
-			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
+			bulletNStream(4, 1, 0.3, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(1, 2, 0.01, 0, 0, 3, 0, get_rand_val_float(10.0, 20.0), 12, 1, 0, null, \
 			30, -0.1)
-			bulletNStream(1, 3, 0.3, 5, 6, 2, 0, 20, 11, 3, 3, get_node_or_null("../" + enemy_name))
+			bulletNStream(2, 3, 0.5, 0, 0, 2, 0, 20, 11, 3, 1, get_node_or_null("../" + enemy_name))
 		5: # Mid ( Mid Random & Hard Targeted)
 			bulletNStream(4, 1, 0.2, 5, 6, 1, 0, 12, 5, 3, 1)
 			bulletNStream(8, 2, 1, 45, 45, 3, 0, 10, 12, get_rand_val_float(0.1 ,3), 2, null, 30, \

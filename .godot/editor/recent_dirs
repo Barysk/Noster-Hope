@@ -1,5 +1,5 @@
-res://Entity/Player/Model/Animations
-res://Entity/Player/Model/Mesh
+/home/bk/Documents/GameDev/Godot/compiled_projects
+res://Font
 res://Entity/Player/Model
 res://Entity/DataServer/Projectiles
 res://Stages/Space
@@ -8,7 +8,6 @@ res://Entity/Player/explosion
 /home/bk/.fonts
 res://Entity/Tools
 res://Entity/DataServer
-/home/bk/Documents/GameDev/Godot/compiled_projects
 res://addons/testing_object_bk
 res://Entity/Player/Bullet
 res://Entity/Player

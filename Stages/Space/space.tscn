@@ -466,12 +466,14 @@ theme_override_constants/separation = 15
 
 [node name="MainMenu" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Main menu"
 
 [node name="QuitGame" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("4_w04ry")
 theme_override_font_sizes/font_size = 32
 text = "Quit Game"

@@ -18,14 +18,18 @@ const HEALTH = 100		## MAX health
 
 #	[ Variables ] 
 
-var is_active : bool = true : set = state_changed
 var health 	: int = HEALTH : set = health_changed
 
 
 #	[ Setters ]
 
-func state_changed(new_state) -> void:
-	is_active = new_state
+func health_changed(new_health) -> void:
+		health = clamp(new_health, 0, HEALTH)
+
+
+#	[ My functions ]
+
+func set_barrier_state(new_state : bool) -> void:
 	if new_state == false:
 		cpu_particles_3d.emitting = true
 		cpu_particles_3d_2.emitting = true
@@ -38,21 +42,6 @@ func state_changed(new_state) -> void:
 		collision_shape_3d.set_deferred("disabled", false)
 		hurtbox_collider.set_deferred("disabled", false)
 
-func health_changed(new_health) -> void:
-	if new_health < health:
-		health = clamp(new_health, 0, HEALTH)
-		if health <= 0:
-			set_barrier_state(false)
-			reboot_timer.start()
-	else:
-		health = clamp(new_health, 0, HEALTH)
-
-
-#	[ My functions ]
-
-func set_barrier_state(new_state : bool) -> void:
-	is_active = new_state
-
 func set_barrier_health(new_health : int) -> void:
 	health = new_health
 
@@ -62,6 +51,9 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 	# print(area, " is in group ", area.get_groups())	# DELETE in future
 	if area.is_in_group("player_bullet"):
 		health -= 1
+		if health <= 0:
+			set_barrier_state(false)
+			reboot_timer.start()
 
 
 func _on_reboot_timer_timeout() -> void:

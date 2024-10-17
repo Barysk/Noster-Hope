@@ -12,6 +12,7 @@ const BULLET_RANDOM = preload("res://Entity/DataServer/Projectiles/bullet_random
 
 @onready var server_model_3d: Node3D = $ServerModel3D
 @onready var hurtbox: Area3D = $Hurtbox
+@onready var hurtbox_collision: CollisionShape3D = $Hurtbox/CollisionShape3D
 @onready var detection_area: Area3D = $DetectionArea
 @onready var barrier: StaticBody3D = $Barrier
 
@@ -59,50 +60,14 @@ var enemy_name : String
 #	[ Setters ]
 
 func affiliation_changed(new_affiliation):
-	if new_affiliation == null:
-		enemy_name = ""
-		
-	elif affiliation == null and new_affiliation != null:
-		new_affiliation.add_score(1000)
-		add_score_timer.start()
-		
-	elif affiliation != null and new_affiliation != null:
-		add_score_timer.stop()
-		add_score_timer.start()
-		new_affiliation.add_score(1250)
-		
-	
 	affiliation = new_affiliation
-	health = HEALTH
-	
-
 
 func affiliation_id_changed(new_affiliation_id):
 	affiliation_id = new_affiliation_id
-	
-	player_group = get_tree().get_nodes_in_group("player")
-	for i in player_group:
-		if i.name == affiliation_id:
-			#affiliation_label.text = i.get_username()
-			var tween = get_tree().create_tween()
-			tween.tween_property(affiliation_label, "text", i.get_username(), 1).set_trans(Tween.TRANS_LINEAR)
-		if i.name != affiliation_id:
-			enemy_name = i.name
-	player_group.clear()
-	
-	if affiliation_id == "":
-		affiliation_label.text = ""
-		enemy_name = ""
-	
-
 
 func health_changed(new_health):
-	if new_health < health:
-		health = clamp(new_health, 0, HEALTH)
-		barrier.set_barrier_health(100)
-		barrier.set_barrier_state(true)
-	else:
-		health = clamp(new_health, 0, HEALTH)
+	health = clamp(new_health, 0, HEALTH)
+
 
 
 #	[ Node Functions ]
@@ -122,8 +87,7 @@ func _process(delta: float) -> void:
 #	[ My Functions ]
 
 func reset_server() -> void:
-	affiliation = null
-	affiliation_id = ""
+	change_affiliation(null, "")
 	health = HEALTH
 	
 	bullet_rotation_axis_1 = 0
@@ -136,9 +100,6 @@ func reset_server() -> void:
 	last_rand_val_int = 0
 	last_rand_val_float = 0
 	
-	## TODO REWRITE to use with player_names
-	#enemy_in_area = []
-	#enemy = null
 	init_rotation = 0
 	
 	barrier.set_barrier_health(100)
@@ -151,8 +112,34 @@ func reset_server() -> void:
 	add_score_timer.stop()
 
 func change_affiliation(new_affiliation_node : CharacterBody3D, new_affiliation_id : String):
+	if new_affiliation_node == null:
+		enemy_name = ""
+	elif affiliation == null and new_affiliation_node != null:
+		new_affiliation_node.add_score(1000)
+		add_score_timer.start()
+	elif affiliation != null and new_affiliation_node != null and new_affiliation_node != affiliation:
+		add_score_timer.stop()
+		add_score_timer.start()
+		new_affiliation_node.add_score(1250)
+	
 	affiliation = new_affiliation_node
 	affiliation_id = new_affiliation_id
+	
+	player_group = get_tree().get_nodes_in_group("player")
+	for i in player_group:
+		if i.name == affiliation_id:
+			#affiliation_label.text = i.get_username()
+			var tween = get_tree().create_tween()
+			tween.tween_property(affiliation_label, "text", i.get_username(), 1).set_trans(Tween.TRANS_LINEAR)
+		if i.name != affiliation_id:
+			enemy_name = i.name
+	player_group.clear()
+	
+	if affiliation_id == "":
+		affiliation_label.text = ""
+		enemy_name = ""
+	
+	health = HEALTH
 
 func get_affiliation_id() -> String:
 	return affiliation_id
@@ -423,8 +410,14 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 	#print(area)
 	if area.is_in_group("player_bullet"):
 		health -= 1
+		barrier.set_barrier_health(100)
+		barrier.set_barrier_state(true)
+		#hurtbox_collision.set_deferred("disabled", false)
 		if health <= 0:
 			change_affiliation(area.get_parent().get_shooter(), area.get_parent().get_shooter_id())
+			barrier.set_barrier_health(100)
+			barrier.set_barrier_state(true)
+			#hurtbox_collision.set_deferred("disabled", true)
 
 # Detection Area Signal
 func _on_detection_area_body_entered(body: Node3D) -> void:
@@ -441,5 +434,5 @@ func _on_detection_area_body_exited(body: Node3D) -> void:
 
 func _on_add_score_timer_timeout() -> void:
 	if affiliation != null:
-		affiliation.add_score(17)
+		affiliation.add_score(7)
 	add_score_timer.start()

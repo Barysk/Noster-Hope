@@ -4,12 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_y7hml"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6e1ul"]
-properties/0/path = NodePath(".:is_active")
+properties/0/path = NodePath(".:health")
 properties/0/spawn = true
-properties/0/replication_mode = 1
-properties/1/path = NodePath(".:health")
-properties/1/spawn = true
-properties/1/replication_mode = 1
+properties/0/replication_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25u83"]
 transparency = 1

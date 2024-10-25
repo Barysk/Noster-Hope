@@ -210,6 +210,10 @@ scale_amount_min = 0.5
 scale_amount_max = 2.0
 scale_amount_curve = SubResource("Curve_yru4w")
 
+[node name="Audio" type="Node3D" parent="."]
+
+[node name="AudioListener3D" type="AudioListener3D" parent="Audio"]
+
 [connection signal="timeout" from="InitTimer" to="." method="_on_init_timer_timeout"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="area_entered" from="BulletHellHurtbox" to="." method="_on_bullet_hell_hurtbox_area_entered"]

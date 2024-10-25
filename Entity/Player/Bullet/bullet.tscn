@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://d2ux6ikgtdjgc"]
+[gd_scene load_steps=7 format=3 uid="uid://d2ux6ikgtdjgc"]
 
 [ext_resource type="Script" path="res://Entity/Player/Bullet/bullet.gd" id="1_sd03x"]
 [ext_resource type="PackedScene" uid="uid://beuwx1khg0uwm" path="res://Entity/Tools/hitbox.tscn" id="2_gtaaj"]
+[ext_resource type="AudioStream" uid="uid://dnquv0itiu6n7" path="res://Sounds/Shot.wav" id="3_h0w2k"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l75io"]
 emission_enabled = true
@@ -30,6 +31,14 @@ collision_mask = 5
 
 [node name="CollisionShape3D" parent="Hitbox" index="0"]
 shape = SubResource("BoxShape3D_67n0d")
+
+[node name="ShotSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_h0w2k")
+unit_size = 1.0
+max_db = 1.0
+autoplay = true
+max_distance = 15.0
+doppler_tracking = 1
 
 [connection signal="timeout" from="TimeToLive" to="." method="_on_time_to_live_timeout"]
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

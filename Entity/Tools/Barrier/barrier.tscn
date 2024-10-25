@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dlpyagieaxtks"]
+[gd_scene load_steps=8 format=3 uid="uid://dlpyagieaxtks"]
 
 [ext_resource type="Script" path="res://Entity/Tools/Barrier/barrier.gd" id="1_f4jt1"]
 [ext_resource type="PackedScene" uid="uid://tbrl7caum8kg" path="res://Entity/Tools/hurtbox.tscn" id="2_y7hml"]
+[ext_resource type="AudioStream" uid="uid://ru0dy84610qk" path="res://Sounds/Explosion.wav" id="3_8dgqd"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6e1ul"]
 properties/0/path = NodePath(".:health")
@@ -54,6 +55,14 @@ damping_min = 20.0
 damping_max = 20.0
 scale_amount_max = 7.0
 scale_amount_curve = SubResource("Curve_fktun")
+
+[node name="ExplosionSound" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_8dgqd")
+unit_size = 50.0
+max_db = 6.0
+pitch_scale = 0.5
+max_distance = 48.0
+doppler_tracking = 1
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="timeout" from="RebootTimer" to="." method="_on_reboot_timer_timeout"]

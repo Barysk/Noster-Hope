@@ -36,6 +36,8 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 @onready var camera_target: Node3D = $CameraController/CameraTarget
 @onready var camera_3d: Camera3D = $CameraController/CameraTarget/Camera3D
 
+@onready var audio_listener_3d: AudioListener3D = $Audio/AudioListener3D
+
 @onready var hurtbox_collision: CollisionShape3D = $Hurtbox/CollisionShape3D
 @onready var hurtbox_bullethell_collision: CollisionShape3D = $BulletHellHurtbox/CollisionShape3D
 
@@ -159,6 +161,8 @@ func _ready() -> void:
 	spawn()
 	# Set the corresponding camera to a player
 	camera_3d.current = true
+	
+	audio_listener_3d.make_current()
 
 func _physics_process(delta: float) -> void:
 	health_bombs_sync()

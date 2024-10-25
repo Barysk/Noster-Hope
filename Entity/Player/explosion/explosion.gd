@@ -1,6 +1,7 @@
 extends Node3D
 
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var explosion_sound: AudioStreamPlayer3D = $ExplosionSound
 
 var explosion_owner : String = ""
 

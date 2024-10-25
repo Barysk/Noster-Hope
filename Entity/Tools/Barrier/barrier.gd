@@ -9,6 +9,7 @@ extends StaticBody3D
 @onready var hurtbox_collider: CollisionShape3D = $Hurtbox/CollisionShape3D
 @onready var cpu_particles_3d: CPUParticles3D = $CPUParticles3D
 @onready var cpu_particles_3d_2: CPUParticles3D = $CPUParticles3D2
+@onready var explosion_sound: AudioStreamPlayer3D = $ExplosionSound
 
 
 #	[ Constants ]
@@ -36,6 +37,7 @@ func set_barrier_state(new_state : bool) -> void:
 		mesh_instance_3d.hide()
 		collision_shape_3d.set_deferred("disabled", true)
 		hurtbox_collider.set_deferred("disabled", true)
+		explosion_sound.play()
 	else:
 		cpu_particles_3d_2.emitting = false
 		mesh_instance_3d.show()

@@ -48,8 +48,6 @@ var direction_changed_on_axis_3 : bool = false
 var last_rand_val_int : int = 0
 var last_rand_val_float : float = 0
 
-#var enemy_in_area : Array = []
-#var enemy : CharacterBody3D
 var init_rotation : float = 0
 
 var player_group : Array
@@ -81,7 +79,6 @@ func _process(delta: float) -> void:
 	else:
 		if health != 0 and player_names.has(enemy_name):
 			attack_with_pattern(health + 3)
-	
 
 
 #	[ My Functions ]
@@ -128,7 +125,6 @@ func change_affiliation(new_affiliation_node : CharacterBody3D, new_affiliation_
 	player_group = get_tree().get_nodes_in_group("player")
 	for i in player_group:
 		if i.name == affiliation_id:
-			#affiliation_label.text = i.get_username()
 			var tween = get_tree().create_tween()
 			tween.tween_property(affiliation_label, "text", i.get_username(), 1).set_trans(Tween.TRANS_LINEAR)
 		if i.name != affiliation_id:
@@ -185,7 +181,7 @@ func get_rand_val_float(from : float, to : float) -> float:
 	return last_rand_val_float
 
 
-#	[ BulletHell Things ]
+#	[ Bullet Patterns ]
 
 func bulletStraightInit(speed : float, time_to_live_timer : float, change_state_timer : float, \
 bullet_rotation_axis : int, additional_init_rotation : float):
@@ -407,17 +403,14 @@ random_change_direction : int):
 #	[ Child Node's signals ]
 
 func _on_hurtbox_area_entered(area: Area3D) -> void:
-	#print(area)
 	if area.is_in_group("player_bullet"):
 		health -= 1
 		barrier.set_barrier_health(100)
 		barrier.set_barrier_state(true)
-		#hurtbox_collision.set_deferred("disabled", false)
 		if health <= 0:
 			change_affiliation(area.get_parent().get_shooter(), area.get_parent().get_shooter_id())
 			barrier.set_barrier_health(100)
 			barrier.set_barrier_state(true)
-			#hurtbox_collision.set_deferred("disabled", true)
 
 # Detection Area Signal
 func _on_detection_area_body_entered(body: Node3D) -> void:

@@ -47,16 +47,15 @@ func set_barrier_state(new_state : bool) -> void:
 func set_barrier_health(new_health : int) -> void:
 	health = new_health
 
+
 # 	[ Child Node's signals ]
 
 func _on_hurtbox_area_entered(area: Area3D) -> void:
-	# print(area, " is in group ", area.get_groups())	# DELETE in future
 	if area.is_in_group("player_bullet"):
 		health -= 1
 		if health <= 0:
 			set_barrier_state(false)
 			reboot_timer.start()
-
 
 func _on_reboot_timer_timeout() -> void:
 	health = HEALTH

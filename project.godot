@@ -28,7 +28,6 @@ window/stretch/mode="viewport"
 
 folder_colors={
 "res://Entity/DataServer/": "teal",
-"res://Entity/Enemies/": "blue",
 "res://Entity/Player/": "green",
 "res://Entity/Tools/": "orange",
 "res://Stages/": "blue"

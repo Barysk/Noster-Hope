@@ -1,7 +1,6 @@
-[gd_scene load_steps=26 format=3 uid="uid://cj5wdypv6bgty"]
+[gd_scene load_steps=25 format=3 uid="uid://cj5wdypv6bgty"]
 
 [ext_resource type="Script" path="res://Stages/Space/space.gd" id="1_vwde2"]
-[ext_resource type="MeshLibrary" uid="uid://d0dhtk4l6m82q" path="res://addons/testing_object_bk/mesh_library_one_cube.tres" id="1_ws17c"]
 [ext_resource type="PackedScene" uid="uid://cjn1o8ydxd63j" path="res://Stages/Space/parallax_effect.tscn" id="2_nqetn"]
 [ext_resource type="Texture2D" uid="uid://d18nx2ym63ivv" path="res://Stages/Space/Skymaps/Stars.png" id="3_b5q1y"]
 [ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
@@ -575,12 +574,6 @@ text = "Quit Game"
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 _spawnable_scenes = PackedStringArray("res://Entity/Player/player.tscn")
 spawn_path = NodePath("..")
-
-[node name="GridMap" type="GridMap" parent="." groups=["static_object"]]
-mesh_library = ExtResource("1_ws17c")
-cell_size = Vector3(4, 4, 4)
-cell_center_y = false
-cell_scale = 4.0
 
 [node name="Server1" parent="." instance=ExtResource("3_ige54")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -96, 0, -96)

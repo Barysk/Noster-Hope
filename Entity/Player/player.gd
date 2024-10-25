@@ -59,7 +59,6 @@ const EXPLOSION = preload("res://Entity/Player/explosion/explosion.tscn")
 @onready var init_timer: Timer = $InitTimer
 
 
-
 #	[ Constants ]
 
 const SPEED : float = 20.0			## Max speed
@@ -90,6 +89,7 @@ const CAM_ROTATION : Vector3 = Vector3.ZERO		## Default camera rotation
 @onready var camera_fov : int = CAM_FOV
 @onready var camera_rotation : Vector3 = CAM_ROTATION
 
+
 #	[ Setters ]
 
 func set_health(new_health : int) -> void:
@@ -109,13 +109,11 @@ func set_energy(new_energy) -> void:
 
 func set_score(new_score) -> void:
 	score = new_score
-	# print("Player ", name, " score is ", score)	# DELETE in future
 	score_changed.emit(score)
 
 func set_username_onchange(new_username):
 	username = new_username
 	drone_name_changed.emit(username)
-
 
 
 #	[ Node functions ]
@@ -124,12 +122,9 @@ func _enter_tree() -> void:
 	# name already is uniq, this made in the space.gd when the player is instantiated
 	set_multiplayer_authority(str(name).to_int())
 
-
 func _ready() -> void:
 	
 	animation_player.play("idle")
-	
-	#space.append_player_to_array(current_player)
 	
 	direction_to_server_1.hide()
 	direction_to_server_2.hide()
@@ -139,7 +134,7 @@ func _ready() -> void:
 	fire_range_close.hide()
 	player_indicator.hide()
 	
-	# Check is this node has the authority to controll corresponding camera
+	# Check is this node has the authority to controll corresponding elements
 	# If not then do not run the rest of the function
 	if not is_multiplayer_authority(): return
 	
@@ -161,7 +156,7 @@ func _ready() -> void:
 	spawn()
 	# Set the corresponding camera to a player
 	camera_3d.current = true
-	
+	# Set the corresponding audio listener to a player
 	audio_listener_3d.make_current()
 
 func _physics_process(delta: float) -> void:
@@ -177,9 +172,7 @@ func _physics_process(delta: float) -> void:
 		smooth_transition(camera_target, "position", Vector3.ZERO, 2)
 		smooth_transition(camera_controller, "rotation", Vector3.ZERO, 0.5)
 		return
-	# Optimize with siganls if you'll have a spare time
-	#  make visible / invisble on affiliation change4
-	#  Optimization possible
+	
 	if server_1.get_affiliation_id() != name:
 		direction_to_server_1.show()
 		direction_to_server_1.look_at(server_1.global_position)
@@ -198,7 +191,6 @@ func _physics_process(delta: float) -> void:
 	else:
 		direction_to_server_3.hide()
 	
-	
 	# Handle staying in Y = 0
 	if position.y != 0:
 		position.y = 0
@@ -211,7 +203,6 @@ func _physics_process(delta: float) -> void:
 		speed = SPEED / 2
 		rotation_speed = ROTATION_SPEED / 2
 		tilt_during_movement = 1.0
-		#camera_3d.fov = 70
 		camera_fov = 70
 		camera_height = Vector3(0, 50, 0)
 		slowdown_transition_duration = 0.2
@@ -222,9 +213,8 @@ func _physics_process(delta: float) -> void:
 		camera_fov = CAM_FOV
 		camera_height = CAM_HEIGHT
 		slowdown_transition_duration = 1
-	#camera_3d.fov = 90
+	
 	smooth_transition(camera_3d, "fov", camera_fov, slowdown_transition_duration)
-	#camera_3d.position.y = 30
 	smooth_transition(camera_target, "position", camera_height, slowdown_transition_duration)
 	
 	if Input.is_action_pressed("attack"):
@@ -363,9 +353,6 @@ func receive_damage(energy_damage_value : int) -> void:
 			player_destroyed()
 		exlode()
 
-
-#	[ My Functions ]
-
 func get_score() -> int:
 	return score
 
@@ -375,6 +362,7 @@ func set_username(player_username : String) -> void:
 func get_username() -> String:
 	return username
 
+
 #	[ Child Node's signals ]
 
 func _on_hurtbox_area_entered(area: Area3D) -> void:
@@ -382,12 +370,10 @@ func _on_hurtbox_area_entered(area: Area3D) -> void:
 		shooter = area.get_parent().get_shooter()
 		shooter_id = area.get_parent().get_shooter_id()
 		if shooter != null and shooter_id != name:
-			# print(shooter)	# DELETE in future
 			receive_damage(3)
 	elif area.is_in_group("player_explosion"):
 		if area.get_parent().get_explosion_owner() != name:
 			receive_damage(33)
-
 
 func _on_bullet_hell_hurtbox_area_entered(area: Area3D) -> void:
 	if area.is_in_group("server_bullet"):
@@ -395,7 +381,6 @@ func _on_bullet_hell_hurtbox_area_entered(area: Area3D) -> void:
 		exlode()
 		if health == -1:
 			player_destroyed()
-		#health += 1	## Uncomment for debug
 
 func _on_init_timer_timeout() -> void:
 	score_changed.emit(score)

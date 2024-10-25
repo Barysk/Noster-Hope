@@ -13,8 +13,6 @@ script/source = "extends Node3D
 @onready var nebulae: MeshInstance3D = $Nebulae
 @onready var nebulae_green: MeshInstance3D = $NebulaeGreen
 
-
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	bright_stars.rotate_y(deg_to_rad(0.03)*delta)

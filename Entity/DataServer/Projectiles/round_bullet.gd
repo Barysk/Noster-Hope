@@ -39,7 +39,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	match state:
 		State.CONSISTENT:
-			# Move bullet forward
 			position += transform.basis * Vector3(0,0,-speed) * delta
 		State.SLOWING_DOWN:
 			speed -= speed * delta
@@ -54,7 +53,6 @@ func bullet_initiate(bullet_speed : float, bullet_live_time : float, change_stat
 	state_time = change_state_time
 
 func bullet_destroy() -> void:
-	# Add some fancy effect later
 	destruction_effect()
 	queue_free()
 

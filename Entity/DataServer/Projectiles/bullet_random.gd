@@ -54,7 +54,6 @@ func _physics_process(delta: float) -> void:
 				speed += (speed/consistent_speed) * delta
 				position += transform.basis * Vector3(0,0,-speed) * delta
 				rotation.y = deg_to_rad(randf_range(-rotation_angle, rotation_angle)) + rotation.y
-				#clamp(rotation.y, -45, 45)
 
 
 

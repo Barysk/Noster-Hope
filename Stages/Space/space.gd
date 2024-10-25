@@ -49,9 +49,6 @@ const PLAYER = preload("res://Entity/Player/player.tscn")
 # Timers
 @onready var second_timer: Timer = $SecondTimer
 
-# Players
-#@onready var players : Array
-
 
 #	[ State ]
 
@@ -83,6 +80,8 @@ var enet_peer = ENetMultiplayerPeer.new()
 # @rpc("authority", "call_remote", "unreliable", 0)
 
 
+#	[ Nodes Functions ]
+
 func _ready() -> void:
 	animation_player.play("Space_living")
 
@@ -90,6 +89,7 @@ func _unhandled_key_input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("quit_game"):
 		#close_connection()
 		get_tree().quit()
+
 
 #	[ My Functions ]
 
@@ -159,7 +159,21 @@ func update_score(score_value) -> void:
 func update_dronename(drone_name) -> void:
 	smooth_transition(drone_name_label, "text", str(drone_name), 1)
 
+func smooth_transition(object : Object, property : NodePath, final_value : Variant, duration : float):
+	var tween = get_tree().create_tween()
+	tween.tween_property(object, property, final_value, duration).set_trans(Tween.TRANS_LINEAR)
+
+func sort_by_score(a, b) -> bool:
+	if a[1] > b[1]:
+		return true
+	return false
+
+
 #	[ Child Node's signals ]
+
+func _on_brief_button_pressed() -> void:
+	brief_button.hide()
+	brief_text.show()
 
 func _on_host_button_pressed() -> void:
 	warning.hide()
@@ -214,13 +228,6 @@ func _on_multiplayer_spawner_spawned(node: Node) -> void:
 		node.energy_changed.connect(update_energy)
 		node.score_changed.connect(update_score)
 		node.drone_name_changed.connect(update_dronename)
-
-func sort_by_score(a, b) -> bool:
-	if a[1] > b[1]:
-		return true
-	return false
-
-#	[ Signals ]
 
 func _on_second_timer_timeout() -> void:
 	#print(get_multiplayer_authority())
@@ -279,9 +286,6 @@ func _on_second_timer_timeout() -> void:
 	smooth_transition(match_timer, "text", str(time), 1)
 	second_timer.start()
 
-func smooth_transition(object : Object, property : NodePath, final_value : Variant, duration : float):
-	var tween = get_tree().create_tween()
-	tween.tween_property(object, property, final_value, duration).set_trans(Tween.TRANS_LINEAR)
 
 # [ UPNP ]
 
@@ -300,8 +304,3 @@ func upnp_setup() -> void:
 		"UPNP Port Mapping Failed! Error %s" % map_result)
 	
 	print("Success! Join Address: %s" % upnp.query_external_address())
-
-
-func _on_brief_button_pressed() -> void:
-	brief_button.hide()
-	brief_text.show()

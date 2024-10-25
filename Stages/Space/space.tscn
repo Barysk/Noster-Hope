@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://cjn1o8ydxd63j" path="res://Stages/Space/parallax_effect.tscn" id="2_nqetn"]
 [ext_resource type="Texture2D" uid="uid://d18nx2ym63ivv" path="res://Stages/Space/Skymaps/Stars.png" id="3_b5q1y"]
 [ext_resource type="PackedScene" uid="uid://dslka5hon8bfc" path="res://Entity/DataServer/server.tscn" id="3_ige54"]
-[ext_resource type="FontFile" uid="uid://cjor0xw6k11hk" path="res://Font/3270-Regular.ttf" id="4_w04ry"]
+[ext_resource type="FontFile" uid="uid://cjb1iocsk01fu" path="res://Font/Not Jam Mono Clean 8.ttf" id="4_f5n75"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_8sgsg"]
 panorama = ExtResource("3_b5q1y")
@@ -157,10 +157,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -302.0
-offset_top = 11.0
-offset_right = -11.0
-offset_bottom = -11.0
+offset_left = -296.0
+offset_top = 111.0
+offset_right = -17.0
+offset_bottom = -111.0
 grow_horizontal = 0
 grow_vertical = 2
 size_flags_horizontal = 0
@@ -175,17 +175,18 @@ theme_override_constants/margin_bottom = 5
 
 [node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/BriefText/MarginContainer"]
 layout_mode = 2
-theme_override_fonts/normal_font = ExtResource("4_w04ry")
-theme_override_fonts/mono_font = ExtResource("4_w04ry")
-theme_override_fonts/italics_font = ExtResource("4_w04ry")
-theme_override_fonts/bold_italics_font = ExtResource("4_w04ry")
-theme_override_fonts/bold_font = ExtResource("4_w04ry")
-theme_override_font_sizes/bold_italics_font_size = 16
-theme_override_font_sizes/italics_font_size = 16
-theme_override_font_sizes/mono_font_size = 16
-theme_override_font_sizes/normal_font_size = 16
-theme_override_font_sizes/bold_font_size = 16
+theme_override_fonts/normal_font = ExtResource("4_f5n75")
+theme_override_fonts/mono_font = ExtResource("4_f5n75")
+theme_override_fonts/italics_font = ExtResource("4_f5n75")
+theme_override_fonts/bold_italics_font = ExtResource("4_f5n75")
+theme_override_fonts/bold_font = ExtResource("4_f5n75")
+theme_override_font_sizes/bold_italics_font_size = 8
+theme_override_font_sizes/italics_font_size = 8
+theme_override_font_sizes/mono_font_size = 8
+theme_override_font_sizes/normal_font_size = 8
+theme_override_font_sizes/bold_font_size = 8
 text = "[ CONTROLS ]
+
 Arrows to move the player
 Shift to slow down
 Z to attack
@@ -193,16 +194,23 @@ X to turn left
 C to turn Right
 Esc to exit
 
+
 [ User Interface ]
+
+Rotating spheres: Your number of tries
 Left Top corner: Collected Data
 Right Top corner: Time till the end of the match
 Left Bottom corner: Your Index
 Bottom Bar: Shows state of your protective wall
 
+
 [ BACKSTORY ]
+
 You are a drone that only purpose is to collect every piece of data from the servers in space. However, you are not alone who hunting down the data. Destroy any enemy you'll oppose.
 
+
 [ Ojective ]
+
 Collect as much data as possible
 "
 autowrap_mode = 2
@@ -241,14 +249,14 @@ layout_mode = 2
 [node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "Main Menu"
 
 [node name="BriefButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 16
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 8
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")
@@ -268,8 +276,8 @@ layout_mode = 2
 [node name="HostButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")
@@ -286,8 +294,8 @@ text = "Host"
 [node name="IsOnlineCheckBox" type="CheckBox" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 10
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")
@@ -304,8 +312,8 @@ text = "Online Mode"
 
 [node name="JoinButton" type="Button" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")
@@ -321,8 +329,8 @@ text = "Join"
 
 [node name="AddressLine" type="LineEdit" parent="CanvasLayer/VBoxContainer/MainMenu/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/read_only = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/normal = SubResource("StyleBoxFlat_wu6ly")
@@ -344,8 +352,8 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Label" type="Label" parent="CanvasLayer/VBoxContainer/Warning/MarginContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 horizontal_alignment = 1
 
 [node name="HUD" type="Control" parent="CanvasLayer"]
@@ -369,8 +377,8 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Score" type="Label" parent="CanvasLayer/HUD/MarginContainer2"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "HostErr"
 
 [node name="MarginContainer3" type="MarginContainer" parent="CanvasLayer/HUD"]
@@ -388,8 +396,8 @@ theme_override_constants/margin_bottom = 5
 
 [node name="Time" type="Label" parent="CanvasLayer/HUD/MarginContainer3"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "Timezone Sync"
 horizontal_alignment = 2
 
@@ -413,8 +421,8 @@ theme_override_constants/separation = 10
 
 [node name="DroneName" type="Label" parent="CanvasLayer/HUD/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "EscToExit"
 horizontal_alignment = 2
 
@@ -467,8 +475,8 @@ alignment = 1
 
 [node name="MatchResults" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "Data Collection Results"
 horizontal_alignment = 1
 
@@ -483,15 +491,15 @@ layout_mode = 2
 [node name="WonPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
 layout_mode = 2
 size_flags_horizontal = 0
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "name"
 horizontal_alignment = 2
 
 [node name="LostPlayer" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Names"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "name"
 horizontal_alignment = 2
 
@@ -502,14 +510,14 @@ alignment = 1
 [node name="Separator" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = ":"
 
 [node name="Separator2" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Separators"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = ":"
 horizontal_alignment = 1
 
@@ -519,15 +527,15 @@ alignment = 2
 
 [node name="WonPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "000000"
 horizontal_alignment = 2
 
 [node name="LostPlayerScore" type="Label" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer/Scores"]
 layout_mode = 2
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 text = "000000"
 horizontal_alignment = 2
 
@@ -538,8 +546,8 @@ theme_override_constants/separation = 15
 [node name="MainMenu" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")
@@ -556,8 +564,8 @@ text = "Main menu"
 [node name="QuitGame" type="Button" parent="CanvasLayer/EndScreen/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_fonts/font = ExtResource("4_w04ry")
-theme_override_font_sizes/font_size = 32
+theme_override_fonts/font = ExtResource("4_f5n75")
+theme_override_font_sizes/font_size = 16
 theme_override_styles/focus = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled_mirrored = SubResource("StyleBoxFlat_wu6ly")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_wu6ly")

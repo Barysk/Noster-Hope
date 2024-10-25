@@ -1,15 +1,3 @@
-res://Entity/Tools/Barrier/barrier.tscn
-res://addons/testing_object_bk/mesh_library_one_cube.tres
-res://Entity/Tools/Barrier/barrier.gd
-res://export_presets.cfg
+res://Entity/Player/player.tscn
 res://Stages/Space/space.tscn
-res://Entity/DataServer/Projectiles/bullet_random.gd
-res://Entity/DataServer/Projectiles/round_bullet.gd
-res://Entity/DataServer/server.gd
-res://Entity/Player/Bullet/bullet.gd
-res://Entity/Player/explosion/explosion.gd
-res://Entity/Player/player.gd
-res://Entity/Tools/acception_area.tscn
 res://Stages/Space/space.gd
-res://Stages/Space/parallax_effect.tscn
-res://gitignore.txt

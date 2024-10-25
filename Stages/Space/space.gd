@@ -233,14 +233,14 @@ func _on_second_timer_timeout() -> void:
 	#print(get_multiplayer_authority())
 	match state:
 		State.State1_Waiting:
-			if time != 30:
-				time = 30
+			if time != 10:
+				time = 10
 		State.State2_Warmup:
 			if time > 0:
 				time -= 1
 				match_timer.text = str(time)
 			elif time <= 0 and player_names.size() == 2:	#goto 3
-				time = 600
+				time = 400
 				state = State.State3_Fight
 				reset_all()
 			elif time <= 0 and player_names.size() != 2:	#goto 1
@@ -277,11 +277,11 @@ func _on_second_timer_timeout() -> void:
 				if player_names.size() == 2:
 					end_screen.hide()
 					state = State.State2_Warmup
-					time = 30
+					time = 10
 				elif player_names.size() != 2:
 					end_screen.hide()
 					state = State.State1_Waiting
-					time = 30
+					time = 10
 	
 	smooth_transition(match_timer, "text", str(time), 1)
 	second_timer.start()

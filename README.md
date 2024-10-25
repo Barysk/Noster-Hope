@@ -1,6 +1,7 @@
 # Noster: Hope
 A multiplayer game for two players.
-For connection to work, enable UPNP on your router.
+
+For connection to work, enable UPNP on your router. Usually enabled by default.
 
 ## Tools used to create this game:
 

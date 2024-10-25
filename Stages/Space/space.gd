@@ -66,7 +66,7 @@ enum State{
 @onready var time : int = 0				## Time till state change
 @onready var player_nodes : Array		## Player node, temporar var for getting names
 @onready var player_names : Array		## Player node names, used for getting node from the tree
-@onready var players_endscreen : Array = [["Disconnected", 1], ["Disconnected", 0]] ## Array for printing score
+@onready var players_endscreen : Array = [["Disconnected", 0], ["Disconnected", 0]] ## Array for printing score
 @onready var state : State = State.State1_Waiting	## Current state
 
 
@@ -254,7 +254,6 @@ func _on_second_timer_timeout() -> void:
 				for i in range(player_names.size()):
 					if get_node_or_null(NodePath(player_names[i])).has_method("get_score")\
 					and get_node_or_null(NodePath(player_names[i])).has_method("get_username"):
-						#players_endscreen[i][0] = get_node_or_null(NodePath(player_names[i])).name
 						players_endscreen[i][0] = get_node_or_null(NodePath(player_names[i])).get_username()
 						players_endscreen[i][1] = get_node_or_null(NodePath(player_names[i])).get_score()
 				
@@ -278,10 +277,12 @@ func _on_second_timer_timeout() -> void:
 					end_screen.hide()
 					state = State.State2_Warmup
 					time = 10
+					players_endscreen = [["Disconnected", 0], ["Disconnected", 0]]
 				elif player_names.size() != 2:
 					end_screen.hide()
 					state = State.State1_Waiting
 					time = 10
+					players_endscreen = [["Disconnected", 0], ["Disconnected", 0]]
 	
 	smooth_transition(match_timer, "text", str(time), 1)
 	second_timer.start()

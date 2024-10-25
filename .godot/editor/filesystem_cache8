@@ -1,6 +1,6 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1729866204
-export_presets.cfg::TextFile::-1::1729863664::0::1::::<><>::
+::res://::1729868126
+export_presets.cfg::TextFile::-1::1729866285::0::1::::<><>::
 icon.svg::CompressedTexture2D::4783204859916442629::1729866204::1729866207::1::::<><>::
 ::res://Entity/::1729863663
 ::res://Entity/DataServer/::1729863663
@@ -17,9 +17,9 @@ bullet_targeted.gd::GDScript::-1::1729863663::0::1::::<>Node3D<>::
 bullet_targeted.tscn::PackedScene::2864389827583648127::1729863663::0::1::::<><>::uid://beuwx1khg0uwm::::res://Entity/Tools/hitbox.tscn<>res://Entity/DataServer/Projectiles/bullet_targeted.gd<>uid://tbrl7caum8kg::::res://Entity/Tools/hurtbox.tscn
 round_bullet.gd::GDScript::-1::1729863663::0::1::::<>Node3D<>::
 round_bullet.tscn::PackedScene::4108158562960362422::1729863663::0::1::::<><>::uid://beuwx1khg0uwm::::res://Entity/Tools/hitbox.tscn<>res://Entity/DataServer/Projectiles/round_bullet.gd<>uid://tbrl7caum8kg::::res://Entity/Tools/hurtbox.tscn
-::res://Entity/Player/::1729866006
+::res://Entity/Player/::1729866211
 player.gd::GDScript::-1::1729863663::0::1::::<>CharacterBody3D<>::
-player.tscn::PackedScene::7246316892210927477::1729866006::0::1::::<><>::res://Entity/Player/player.gd<>uid://og7a242cf7hw::::res://Entity/Player/Model/Drone.gltf<>uid://tbrl7caum8kg::::res://Entity/Tools/hurtbox.tscn
+player.tscn::PackedScene::7246316892210927477::1729866211::0::1::::<><>::res://Entity/Player/player.gd<>uid://og7a242cf7hw::::res://Entity/Player/Model/Drone.gltf<>uid://tbrl7caum8kg::::res://Entity/Tools/hurtbox.tscn
 ::res://Entity/Player/Bullet/::1729863663
 bullet.gd::GDScript::-1::1729863663::0::1::::<>Node3D<>::
 bullet.tscn::PackedScene::9097100670765030266::1729863663::0::1::::<><>::res://Entity/Player/Bullet/bullet.gd<>uid://beuwx1khg0uwm::::res://Entity/Tools/hitbox.tscn<>uid://dnquv0itiu6n7::::res://Sounds/Shot.wav
@@ -43,10 +43,10 @@ Explosion.wav::AudioStreamWAV::1236022492027676590::1729863663::1729863762::1:::
 Shot.wav::AudioStreamWAV::8106000230282987734::1729863663::1729863762::1::::<><>::
 TemporarySolution.wav::AudioStreamWAV::5149667153798493517::1729863663::1729863762::1::::<><>::
 ::res://Stages/::1729863663
-::res://Stages/Space/::1729866174
+::res://Stages/Space/::1729866296
 parallax_effect.tscn::PackedScene::5432983284370924709::1729865840::0::1::::<><>::uid://c38xf40j5npna::::res://Stages/Space/Skymaps/Sun.png<>uid://df3mpfn0n61qy::::res://Stages/Space/Skymaps/BrightStars.png<>uid://5x3kvjgag6pl::::res://Stages/Space/Skymaps/Nebulae.png<>uid://dcrk02fthph53::::res://Stages/Space/Skymaps/Nebulae_Green.png
 space.gd::GDScript::-1::1729866163::0::1::::<>Node3D<>::
-space.tscn::PackedScene::5467814708700950670::1729866174::0::1::::<><>::res://Stages/Space/space.gd<>uid://cjn1o8ydxd63j::::res://Stages/Space/parallax_effect.tscn<>uid://d18nx2ym63ivv::::res://Stages/Space/Skymaps/Stars.png<>uid://dslka5hon8bfc::::res://Entity/DataServer/server.tscn<>uid://cjor0xw6k11hk::::res://Font/3270-Regular.ttf
+space.tscn::PackedScene::5467814708700950670::1729866296::0::1::::<><>::res://Stages/Space/space.gd<>uid://cjn1o8ydxd63j::::res://Stages/Space/parallax_effect.tscn<>uid://d18nx2ym63ivv::::res://Stages/Space/Skymaps/Stars.png<>uid://dslka5hon8bfc::::res://Entity/DataServer/server.tscn<>uid://cjor0xw6k11hk::::res://Font/3270-Regular.ttf
 ::res://Stages/Space/Skymaps/::1729863762
 BrightStars.png::CompressedTexture2D::7568764521058624968::1729863663::1729863728::1::::<><>::
 Nebulae.png::CompressedTexture2D::2154865048387333813::1729863664::1729863754::1::::<><>::

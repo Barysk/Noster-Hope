@@ -1,0 +1,5 @@
+Asteroids/Planets for orientation
+Serwer bullets not killing you, but instead they making your attack weaker
+Power points for "grazing" bullets
+Serwer  shield state
+Difficulty choice && Difficulty rebalance
